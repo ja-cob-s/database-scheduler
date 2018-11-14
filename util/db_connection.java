@@ -2,12 +2,21 @@ package util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  * @author jnsch
  */
 
  public class db_connection {
+
+    /**
+     * Connection String
+     * Server name:  52.206.157.109 
+     * Database name:  U05Mc2
+     * Username:  U05Mc2
+     * Password:  53688542146
+     */
 
     private static final String DB_NAME = "U05Mc2";
     private static final String USERNAME = "U05Mc2";
@@ -31,17 +40,17 @@ import java.sql.DriverManager;
             connection = DriverManager.getConnection(PATH, USERNAME, PASSWORD);
             System.out.print("Connected\n");
         } catch (ClassNotFoundException e) {
-            System.out.println("Class Not Found: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     public static void disconnect(){ 
         try {
             connection.close();
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         } finally {
             System.out.println("Disconnected from database.");
         }
