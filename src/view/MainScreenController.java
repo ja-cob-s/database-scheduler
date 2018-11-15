@@ -5,6 +5,7 @@
  */
 package view;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -20,6 +21,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -114,13 +116,44 @@ public class MainScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
     }    
-
+    
+    @FXML
+    private void NewButtonHandler(ActionEvent event) throws IOException {
+        Stage stage = (Stage) NewButton.getScene().getWindow();
+        if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
+            helper.nextScreenHandler(stage, "Appointment.fxml");
+        } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
+            helper.nextScreenHandler(stage, "Customer.fxml");
+        }
+    }
+    
+    @FXML
+    private void EditButtonHandler(ActionEvent event) throws IOException {
+        Stage stage = (Stage) NewButton.getScene().getWindow();
+        if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
+            // TODO
+        } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
+            // TODO
+        }
+    }
+    
     @FXML
     private void DeleteButtonHandler(ActionEvent event) {
-    }
-
+        if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
+            // TODO
+        } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
+            // TODO
+        }
+    }  
+    
     @FXML
-    private void EditButtonHandler(ActionEvent event) {
+    private void ExitButtonHandler(ActionEvent event) {
+        /*Terminates the application when the exit button is pressed
+          Displays confirmation dialog first*/
+        if (helper.showConfirmationDialog("Are you sure you want to exit?")){
+            // ... user chose OK
+            System.exit(0); 
+        } 
     }
 
     @FXML
@@ -133,20 +166,6 @@ public class MainScreenController implements Initializable {
 
     @FXML
     private void ReportChooserHandler(ActionEvent event) {
-    }
-
-    @FXML
-    private void NewButtonHandler(ActionEvent event) {
-    }
-
-    @FXML
-    private void ExitButtonHandler(ActionEvent event) {
-        /*Terminates the application when the exit button is pressed
-          Displays confirmation dialog first*/
-        if (helper.showConfirmationDialog("Are you sure you want to exit?")){
-            // ... user chose OK
-            System.exit(0); 
-        } 
-    }
+    }      
     
 }
