@@ -22,7 +22,6 @@ public class Appointment {
     private String type;
     private LocalDateTime start;
     private LocalDateTime end;
-    private String createdBy;
     
     // Constructors
     public Appointment() {
@@ -40,7 +39,6 @@ public class Appointment {
         this.type = type;
         this.start = start;
         this.end = end;
-        this.createdBy = createdBy;
     }
 
     // Getters
@@ -82,10 +80,6 @@ public class Appointment {
 
     public LocalDateTime getEnd() {
         return end;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
     }
     
     // Setters
@@ -129,10 +123,6 @@ public class Appointment {
         this.end = end;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-    
     @Override
     public boolean equals(Object obj) {
         if (getClass() != obj.getClass() || obj == null) {

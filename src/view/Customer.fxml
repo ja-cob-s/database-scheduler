@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="CustomerPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="ExitButton" layoutX="720.0" layoutY="36.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#ExitButtonHandler" prefHeight="25.0" prefWidth="60.0" text="Exit" />
+      <TableView layoutX="25.0" layoutY="100.0" prefHeight="435.0" prefWidth="300.0">
+        <columns>
+          <TableColumn fx:id="CustomerNameColumn" prefWidth="300.0" text="Name" />
+        </columns>
+      </TableView>
+      <Label fx:id="NameLabel" layoutX="375.0" layoutY="119.0" text="Name">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="AddressLabel" layoutX="375.0" layoutY="165.0" text="Address">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="CityLabel" layoutX="375.0" layoutY="267.0" text="City">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="PostalCodeLabel" layoutX="375.0" layoutY="360.0" text="Postal Code">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="PhoneLabel" layoutX="375.0" layoutY="408.0" text="Phone Number">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="CountryLabel" layoutX="375.0" layoutY="313.0" text="Country">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="CancelButton" cancelButton="true" layoutX="617.0" layoutY="505.0" mnemonicParsing="false" onAction="#CancelButtonHandler" prefHeight="30.0" prefWidth="70.0" text="Cancel">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <TextField fx:id="NameField" layoutX="487.0" layoutY="117.0" prefWidth="200.0" />
+      <TextArea fx:id="DescriptionField" layoutX="487.0" layoutY="166.0" prefHeight="75.0" prefWidth="200.0" />
+      <ChoiceBox fx:id="TypeChooser" layoutX="487.0" layoutY="264.0" prefWidth="200.0" />
+      <Label fx:id="CustomerLabel" layoutX="28.0" layoutY="35.0" text="Customer">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="SaveButton1" layoutX="547.0" layoutY="505.0" mnemonicParsing="false" onAction="#SaveButtonHandler" prefHeight="30.0" prefWidth="50.0" text="Save">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <TextField fx:id="CountryField" disable="true" editable="false" layoutX="487.0" layoutY="311.0" prefWidth="200.0" />
+      <TextField fx:id="PostalCodeField" layoutX="487.0" layoutY="358.0" prefWidth="200.0" />
+      <TextField fx:id="PhoneNumber" layoutX="487.0" layoutY="406.0" prefWidth="200.0" />
+   </children>
+</AnchorPane>
