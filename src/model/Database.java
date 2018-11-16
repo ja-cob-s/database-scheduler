@@ -34,6 +34,19 @@ public class Database {
     }
     
     public void addAppointment(Appointment appointment) {
+        connection = DBConnection.getConnection();
+        /*
+        try {
+            StringBuilder sql = new StringBuilder("INSERT INTO appointment(customerId, userId, title, description, location, contact, type, start, end) ");
+            sql.append("VALUES(");
+            sql.append
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        */
         myAppointments.add(appointment);
     }
     
@@ -54,7 +67,7 @@ public class Database {
         connection = DBConnection.getConnection();
         
         try {
-            PreparedStatement ps = connection.prepareStatement("select * from appointment;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM appointment;");
             //ps.setInt(1, 1);
             //System.out.println("sql query " + ps.toString());
             ResultSet rs = ps.executeQuery();
@@ -83,7 +96,7 @@ public class Database {
         connection = DBConnection.getConnection();
         
         try {
-            PreparedStatement ps = connection.prepareStatement("select * from customer;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM customer;");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int customerID = rs.getInt("customerId");
@@ -101,7 +114,7 @@ public class Database {
         connection = DBConnection.getConnection();
         Customer customer = new Customer();
         try {
-            PreparedStatement ps = connection.prepareStatement("select * from customer where customerId = ?;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM customer WHERE customerId = ?;");
             ps.setInt(1, customerID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -119,7 +132,7 @@ public class Database {
         connection = DBConnection.getConnection();
         Address address = new Address();
         try {
-            PreparedStatement ps = connection.prepareStatement("select * from address where addressId = ?;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM address WHERE addressId = ?;");
             ps.setInt(1, addressID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -140,7 +153,7 @@ public class Database {
         connection = DBConnection.getConnection();
         City city = new City();
         try {
-            PreparedStatement ps = connection.prepareStatement("select * from city where cityId = ?;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM city WHERE cityId = ?;");
             ps.setInt(1, cityID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -158,7 +171,7 @@ public class Database {
         connection = DBConnection.getConnection();
         Country country = new Country();
         try {
-            PreparedStatement ps = connection.prepareStatement("select * from country where countryId = ?;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM country WHERE countryId = ?;");
             ps.setInt(1, countryID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -175,7 +188,7 @@ public class Database {
         connection = DBConnection.getConnection();
         User user = new User();
         try {
-            PreparedStatement ps = connection.prepareStatement("select * from user where userId = ?;");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM user WHERE userId = ?;");
             ps.setInt(1, userID);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
