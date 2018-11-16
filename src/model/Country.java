@@ -24,11 +24,11 @@ public class Country {
 
     // Getters
     public int getCountryID() {
-        return countryID;
+        return this.countryID;
     }
 
     public String getCountry() {
-        return country;
+        return this.country;
     }
 
     // Setters 
@@ -38,6 +38,11 @@ public class Country {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+    
+    @Override
+    public String toString() {
+        return this.country;
     }
     
     @Override

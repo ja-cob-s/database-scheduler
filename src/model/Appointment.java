@@ -5,7 +5,8 @@
  */
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  *
@@ -20,15 +21,16 @@ public class Appointment {
     private String location;
     private String contact;
     private String type;
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDate date;
+    private LocalTime start;
+    private LocalTime end;
     
     // Constructors
     public Appointment() {
     }
 
     public Appointment(int appointmentID, Customer customer, User user, String title, String description, 
-            String location, String contact, String type, LocalDateTime start, LocalDateTime end, String createdBy) {
+            String location, String contact, String type, LocalDate date, LocalTime start, LocalTime end) {
         this.appointmentID = appointmentID;
         this.customer = customer;
         this.user = user;
@@ -37,49 +39,54 @@ public class Appointment {
         this.location = location;
         this.contact = contact;
         this.type = type;
+        this.date = date;
         this.start = start;
         this.end = end;
     }
 
     // Getters
     public int getAppointmentID() {
-        return appointmentID;
+        return this.appointmentID;
     }
 
     public Customer getCustomer() {
-        return customer;
+        return this.customer;
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public String getLocation() {
-        return location;
+        return this.location;
     }
 
     public String getContact() {
-        return contact;
+        return this.contact;
     }
 
     public String getType() {
-        return type;
+        return this.type;
+    }
+    
+    public LocalDate getDate() {
+        return this.date;
     }
 
-    public LocalDateTime getStart() {
-        return start;
+    public LocalTime getStart() {
+        return this.start;
     }
 
-    public LocalDateTime getEnd() {
-        return end;
+    public LocalTime getEnd() {
+        return this.end;
     }
     
     // Setters
@@ -114,12 +121,16 @@ public class Appointment {
     public void setType(String type) {
         this.type = type;
     }
+    
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
-    public void setStart(LocalDateTime start) {
+    public void setStart(LocalTime start) {
         this.start = start;
     }
 
-    public void setEnd(LocalDateTime end) {
+    public void setEnd(LocalTime end) {
         this.end = end;
     }
 
@@ -134,6 +145,6 @@ public class Appointment {
     
     @Override
     public int hashCode() {
-         return this.appointmentID * 3 * customer.getCustomerID() * user.getUserID();
+         return this.appointmentID * 3 * this.customer.getCustomerID() * this.user.getUserID();
     }
 }

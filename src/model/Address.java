@@ -36,23 +36,23 @@ public class Address {
     }
     
     public String getAddressLine1() {
-        return addressLine1;
+        return this.addressLine1;
     }
     
     public String getAddressLine2() {
-        return addressLine2;
+        return this.addressLine2;
     }
     
     public City getCity() {
-        return city;
+        return this.city;
     }
     
     public String getPostalCode() {
-        return postalCode;
+        return this.postalCode;
     }
     
     public String getPhoneNumber() {
-        return phoneNumber;
+        return this.phoneNumber;
     }
     
     // Setters
@@ -78,6 +78,11 @@ public class Address {
     
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+    
+    @Override
+    public String toString() {
+        return this.addressLine1 + "\n" + this.addressLine2;
     }
     
     @Override

@@ -7,21 +7,34 @@ package view;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Address;
+import model.Appointment;
+import model.City;
+import model.Country;
+import model.Customer;
+import model.Database;
+import model.User;
 
 /**
  * FXML Controller class
@@ -41,41 +54,41 @@ public class MainScreenController implements Initializable {
     @FXML
     private Tab AppointmentsTab;
     @FXML
-    private ChoiceBox<?> AppointmentTypeChooser;
+    private ChoiceBox<Object> AppointmentTypeChooser;
     @FXML
-    private TableView<?> AppointmentsTable;
+    private TableView<Appointment> AppointmentsTable;
     @FXML
-    private TableColumn<?, ?> AppointmentaDateColumn;
+    private TableColumn<Appointment, LocalDate> AppointmentsDateColumn;
     @FXML
-    private TableColumn<?, ?> AppointmentaStartColumn;
+    private TableColumn<Appointment, LocalTime> AppointmentsStartColumn;
     @FXML
-    private TableColumn<?, ?> AppointmentaEndColumn;
+    private TableColumn<Appointment, LocalTime> AppointmentsEndColumn;
     @FXML
-    private TableColumn<?, ?> AppointmentaCustomerColumn;
+    private TableColumn<Appointment, Customer> AppointmentsCustomerColumn;
     @FXML
-    private TableColumn<?, ?> AppointmentaConsultantColumn;
+    private TableColumn<Appointment, User> AppointmentsConsultantColumn;
     @FXML
-    private TableColumn<?, ?> AppointmentaDescriptionColumn;
+    private TableColumn<Appointment, String> AppointmentsDescriptionColumn;
     @FXML
-    private TableColumn<?, ?> AppointmentaLocationColumn;
+    private TableColumn<Appointment, String> AppointmentsLocationColumn;
     @FXML
-    private ChoiceBox<?> AppointmentViewChooser;
+    private ChoiceBox<Object> AppointmentViewChooser;
     @FXML
     private Tab CustomersTab;
     @FXML
-    private TableView<?> CustomersTable;
+    private TableView<Customer> CustomersTable;
     @FXML
-    private TableColumn<?, ?> CustomersNameColumn;
+    private TableColumn<Customer, String> CustomersNameColumn;
     @FXML
-    private TableColumn<?, ?> CustomersAddressColumn;
+    private TableColumn<Customer, Address> CustomersAddressColumn;
     @FXML
-    private TableColumn<?, ?> CustomersCityColumn;
+    private TableColumn<Customer, City> CustomersCityColumn;
     @FXML
-    private TableColumn<?, ?> CustomersCountryColumn;
+    private TableColumn<Customer, Country> CustomersCountryColumn;
     @FXML
-    private TableColumn<?, ?> CustomersPostalCodeColumn;
+    private TableColumn<Customer, String> CustomersPostalCodeColumn;
     @FXML
-    private TableColumn<?, ?> CustomersPhoneColumn;
+    private TableColumn<Customer, String> CustomersPhoneColumn;
     @FXML
     private Tab ReportsTab;
     @FXML
@@ -108,6 +121,7 @@ public class MainScreenController implements Initializable {
     private Button ExitButton;
     
     private ScreenHelper helper;
+    private Database database;
 
     /**
      * Initializes the controller class.
@@ -115,6 +129,15 @@ public class MainScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
+        database = new Database();
+        
+        AppointmentViewChooser.getItems().addAll("Week View", "Month View");
+        AppointmentViewChooser.getSelectionModel().selectFirst();
+        AppointmentTypeChooser.getItems().addAll("Show All Types", new Separator(), "Consulting", "Meeting");
+        AppointmentTypeChooser.getSelectionModel().selectFirst();
+        
+        this.populateAppointmentsTable(database.getAppointments());
+        this.populateCustomersTable(database.getCustomers());
     }    
     
     @FXML
@@ -168,4 +191,24 @@ public class MainScreenController implements Initializable {
     private void ReportChooserHandler(ActionEvent event) {
     }      
     
+    public void populateAppointmentsTable(ObservableList<Appointment> list) {
+        AppointmentsDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        AppointmentsStartColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
+        AppointmentsEndColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
+        AppointmentsCustomerColumn.setCellValueFactory(new PropertyValueFactory<>("customer"));
+        AppointmentsConsultantColumn.setCellValueFactory(new PropertyValueFactory<>("user"));
+        AppointmentsDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        AppointmentsLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        AppointmentsTable.setItems(list);
+    }
+    
+    public void populateCustomersTable(ObservableList<Customer> list) {
+        CustomersNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        CustomersAddressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
+        CustomersCityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
+        CustomersCountryColumn.setCellValueFactory(new PropertyValueFactory<>("country"));
+        CustomersPostalCodeColumn.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        CustomersPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        CustomersTable.setItems(list);
+    }
 }

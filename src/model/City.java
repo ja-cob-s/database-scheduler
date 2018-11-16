@@ -26,15 +26,15 @@ public class City {
     
     // Getters
     public int getCityID() {
-        return cityID;
+        return this.cityID;
     }
 
     public String getCity() {
-        return city;
+        return this.city;
     }
 
     public Country getCountry() {
-        return country;
+        return this.country;
     }
     
     // Setters
@@ -46,8 +46,13 @@ public class City {
         this.city = city;
     }
 
-    public void setCountry(Country country) {
+    public void setCountryID(Country country) {
         this.country = country;
+    }
+    
+    @Override
+    public String toString() {
+        return this.city;
     }
     
     @Override

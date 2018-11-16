@@ -26,15 +26,15 @@ public class User {
 
     // Getters
     public int getUserID() {
-        return userID;
+        return this.userID;
     }
 
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     // Setters
@@ -48,6 +48,11 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    @Override
+    public String toString() {
+        return this.userName;
     }
     
     @Override

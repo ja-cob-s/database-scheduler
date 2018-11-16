@@ -26,15 +26,31 @@ public class Customer {
 
     // Getters
     public int getCustomerID() {
-        return customerID;
+        return this.customerID;
     }
 
     public String getCustomerName() {
-        return customerName;
+        return this.customerName;
     }
 
     public Address getAddress() {
-        return address;
+        return this.address;
+    }
+    
+    public City getCity() {
+        return this.address.getCity();
+    }
+    
+    public Country getCountry() {
+        return this.address.getCity().getCountry();
+    }
+    
+    public String getPostalCode() {
+        return this.address.getPostalCode();
+    }
+    
+    public String getPhoneNumber() {
+        return this.address.getPhoneNumber();
     }
 
     // Setters
@@ -51,6 +67,11 @@ public class Customer {
     }
     
     @Override
+    public String toString() {
+        return this.customerName;
+    }
+    
+    @Override
     public boolean equals(Object obj) {
         if (getClass() != obj.getClass() || obj == null) {
             return false;
@@ -61,6 +82,6 @@ public class Customer {
     
     @Override
     public int hashCode() {
-         return this.customerID * 11 * address.getAddressID();
+         return this.customerID * 11 * this.address.getAddressID();
     }
 }

@@ -19,15 +19,15 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <ChoiceBox fx:id="AppointmentTypeChooser" layoutX="450.0" layoutY="18.0" maxHeight="25.0" maxWidth="115.0" minHeight="25.0" minWidth="115.0" onMouseClicked="#AppointmentTypeChooserHandler" prefHeight="25.0" prefWidth="115.0" />
-                        <TableView fx:id="AppointmentsTable" layoutY="54.0" prefHeight="525.0" prefWidth="800.0">
+                        <TableView fx:id="AppointmentsTable" layoutY="54.0" prefHeight="517.0" prefWidth="800.0">
                           <columns>
-                            <TableColumn fx:id="AppointmentaDateColumn" prefWidth="100.0" text="Date" />
-                            <TableColumn fx:id="AppointmentaStartColumn" minWidth="0.0" prefWidth="75.0" text="Start Time" />
-                              <TableColumn fx:id="AppointmentaEndColumn" prefWidth="75.0" text="End Time" />
-                              <TableColumn fx:id="AppointmentaCustomerColumn" prefWidth="108.0" text="Customer" />
-                              <TableColumn fx:id="AppointmentaConsultantColumn" prefWidth="108.0" text="Consultant" />
-                              <TableColumn fx:id="AppointmentaDescriptionColumn" prefWidth="190.0" text="Description" />
-                              <TableColumn fx:id="AppointmentaLocationColumn" prefWidth="140.0" text="Location" />
+                              <TableColumn fx:id="AppointmentsDateColumn" text="Date" />
+                            <TableColumn fx:id="AppointmentsStartColumn" minWidth="0.0" prefWidth="72.0" text="Start Time" />
+                              <TableColumn fx:id="AppointmentsEndColumn" prefWidth="72.0" text="End Time" />
+                              <TableColumn fx:id="AppointmentsCustomerColumn" prefWidth="120.0" text="Customer" />
+                              <TableColumn fx:id="AppointmentsConsultantColumn" prefWidth="120.0" text="Consultant" />
+                              <TableColumn fx:id="AppointmentsDescriptionColumn" prefWidth="185.0" text="Description" />
+                              <TableColumn fx:id="AppointmentsLocationColumn" prefWidth="137.0" text="Location" />
                           </columns>
                         </TableView>
                         <ChoiceBox fx:id="AppointmentViewChooser" layoutX="585.0" layoutY="18.0" maxHeight="25.0" maxWidth="115.0" minHeight="25.0" minWidth="115.0" onMouseClicked="#AppointmentViewChooserHandler" prefHeight="25.0" prefWidth="115.0" />
@@ -42,14 +42,14 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="NewButton" defaultButton="true" layoutX="20.0" layoutY="18.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#NewButtonHandler" prefHeight="25.0" prefWidth="60.0" text="New" />
-                        <TableView fx:id="CustomersTable" layoutY="54.0" prefHeight="525.0" prefWidth="800.0">
+                        <TableView fx:id="CustomersTable" layoutY="54.0" prefHeight="517.0" prefWidth="800.0">
                            <columns>
                               <TableColumn fx:id="CustomersNameColumn" prefWidth="150.0" text="Name" />
                               <TableColumn fx:id="CustomersAddressColumn" minWidth="0.0" prefWidth="225.0" text="Address" />
-                              <TableColumn fx:id="CustomersCityColumn" prefWidth="105.0" text="City" />
-                              <TableColumn fx:id="CustomersCountryColumn" prefWidth="102.0" text="Country" />
+                              <TableColumn fx:id="CustomersCityColumn" prefWidth="109.0" text="City" />
+                              <TableColumn fx:id="CustomersCountryColumn" prefWidth="85.0" text="Country" />
                               <TableColumn fx:id="CustomersPostalCodeColumn" text="Postal Code" />
-                              <TableColumn fx:id="CustomersPhoneColumn" prefWidth="135.0" text="Phone Number" />
+                              <TableColumn fx:id="CustomersPhoneColumn" prefWidth="131.0" text="Phone Number" />
                            </columns>
                         </TableView>
                         <Button fx:id="DeleteButton" layoutX="180.0" layoutY="18.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#DeleteButtonHandler" prefHeight="25.0" prefWidth="60.0" text="Delete" />
@@ -68,13 +68,12 @@
                               <MenuItem fx:id="CustomersLocationMenuItem" mnemonicParsing="false" text="Customers By Location" />
                            </items>
                         </SplitMenuButton>
-                        <TableView fx:id="ReportsTable" layoutY="54.0" prefHeight="525.0" prefWidth="800.0">
+                        <TableView fx:id="ReportsTable" layoutY="54.0" prefHeight="517.0" prefWidth="800.0">
                            <columns>
-                              <TableColumn fx:id="ReportsDateColumn" prefWidth="100.0" text="Date" />
-                              <TableColumn fx:id="ReportsStartColumn" minWidth="0.0" prefWidth="75.0" text="Start Time" />
-                              <TableColumn fx:id="ReportsEndColumn" prefWidth="75.0" text="End Time" />
-                              <TableColumn fx:id="ReportsCustomerColumn" prefWidth="108.0" text="Customer" />
-                              <TableColumn fx:id="ReportsConsultantColumn" prefWidth="108.0" text="Consultant" />
+                              <TableColumn fx:id="ReportsStartColumn" minWidth="0.0" prefWidth="100.0" text="Start Time" />
+                              <TableColumn fx:id="ReportsEndColumn" prefWidth="100.0" text="End Time" />
+                              <TableColumn fx:id="ReportsCustomerColumn" prefWidth="133.0" text="Customer" />
+                              <TableColumn fx:id="ReportsConsultantColumn" prefWidth="133.0" text="Consultant" />
                               <TableColumn fx:id="ReportsDescriptionColumn" prefWidth="190.0" text="Description" />
                               <TableColumn fx:id="ReportsLocationColumn" prefWidth="140.0" text="Location" />
                            </columns>
