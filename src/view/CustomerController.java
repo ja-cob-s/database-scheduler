@@ -8,6 +8,7 @@ package view;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,11 +16,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.City;
 import model.Customer;
+import model.Database;
 
 /**
  * FXML Controller class
@@ -33,7 +38,9 @@ public class CustomerController implements Initializable {
     @FXML
     private Button ExitButton;
     @FXML
-    private TableColumn<?, ?> CustomerNameColumn;
+    private TableView<Customer> CustomersTable;
+    @FXML
+    private TableColumn<Customer, String> CustomersNameColumn;
     @FXML
     private Label NameLabel;
     @FXML
@@ -51,9 +58,9 @@ public class CustomerController implements Initializable {
     @FXML
     private TextField NameField;
     @FXML
-    private TextArea DescriptionField;
+    private TextArea AddressField;
     @FXML
-    private ChoiceBox<?> TypeChooser;
+    private ChoiceBox<City> CityChooser;
     @FXML
     private Label CustomerLabel;
     @FXML
@@ -63,9 +70,12 @@ public class CustomerController implements Initializable {
     @FXML
     private TextField PostalCodeField;
     @FXML
-    private TextField PhoneNumber;
+    private TextField PhoneNumberField;
     
     private ScreenHelper helper;
+    private Database database;
+    private Customer customer;
+    private ObservableList<City> cities;
 
     /**
      * Initializes the controller class.
@@ -73,7 +83,21 @@ public class CustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
-    }    
+        database = new Database();
+        
+        if (database.getCities().isEmpty()) { database.getCitiesList(); }
+        cities = database.getCities();
+        
+        CityChooser.getItems().addAll(cities.sorted());
+        CityChooser.getSelectionModel().selectFirst();
+        this.populateCustomersTable(database.getCustomers().sorted());
+        
+        CustomersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                this.setCustomer(newSelection);
+            }
+        });
+    }
 
     @FXML
     private void ExitButtonHandler(ActionEvent event) {
@@ -101,6 +125,20 @@ public class CustomerController implements Initializable {
     }
     
     public void setCustomer(Customer customer) {
+        this.customer = customer;
         
+        NameField.setText(customer.getCustomerName());
+        AddressField.setText(customer.getAddress().toString());
+        CityChooser.setValue(customer.getAddress().getCity());
+        CountryField.setText(customer.getAddress().getCity().getCountry().toString());
+        PostalCodeField.setText(customer.getAddress().getPostalCode());
+        PhoneNumberField.setText(customer.getAddress().getPhoneNumber());
+        
+        CustomersTable.getSelectionModel().select(customer);
+    }
+    
+    public void populateCustomersTable(ObservableList<Customer> list) {
+        CustomersNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        CustomersTable.setItems(list);
     }
 }

@@ -39,9 +39,7 @@ public class DatabaseScheduler extends Application {
         DBConnection.connect();  
         Database database = new Database(); 
         database.getAppointmentsList();
-        database.getAppointmentTypesList();
         database.getCustomersList();
-        database.getUserList();
         launch(args);        
         DBConnection.disconnect();
     }

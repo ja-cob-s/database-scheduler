@@ -106,6 +106,10 @@ public class AppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
         database = new Database();
+        
+        if (database.getAppointmentTypes().isEmpty()) { database.getAppointmentTypesList(); }
+        if (database.getUsers().isEmpty()) { database.getUserList(); }
+        
         /* User must pick start and end times within business hours from list
            This fulfills first bullet pointof REQUIREMENT F
            (Business hours assumed to be 8:00am-5:00pm) */
@@ -114,13 +118,15 @@ public class AppointmentController implements Initializable {
         StartChooser.getSelectionModel().select(0);
         EndChooser.getItems().addAll(validEndTimes);    
         EndChooser.getSelectionModel().select(3);
+        
         TypeChooser.getItems().addAll(database.getAppointmentTypes());
         TypeChooser.getSelectionModel().select(0);
         DateChooser.setValue(LocalDate.now());
+        
         /* User must pick customer from table populated w/DB data
            This fulfills 3rd bullet point of REQUIREMENT F */
-        this.populateCustomersTable(database.getCustomers());
-        this.populateConsultantsTable(database.getUsers());    
+        this.populateCustomersTable(database.getCustomers().sorted());
+        this.populateConsultantsTable(database.getUsers().sorted());    
     }    
 
     @FXML
@@ -176,7 +182,7 @@ public class AppointmentController implements Initializable {
 
             // Displays full list if no search string
             if (searchItem == null || searchItem.isEmpty()) {
-                this.populateCustomersTable(database.getCustomers());
+                this.populateConsultantsTable(database.getUsers());
                 found = true;
             }
             // Searches by Name

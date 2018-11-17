@@ -16,7 +16,7 @@
       <Button fx:id="ExitButton" layoutX="720.0" layoutY="47.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#ExitButtonHandler" prefHeight="25.0" prefWidth="60.0" text="Exit" />
       <TableView fx:id="CustomersTable" layoutX="25.0" layoutY="146.0" prefHeight="160.0" prefWidth="300.0">
         <columns>
-          <TableColumn fx:id="CustomersNameColumn" prefWidth="285.0" text="Name" />
+          <TableColumn fx:id="CustomersNameColumn" prefWidth="285.0" sortable="false" text="Name" />
         </columns>
       </TableView>
       <TextField fx:id="CustomerSearch" layoutX="25.0" layoutY="111.0" prefWidth="240.0" promptText="Search" />
@@ -79,7 +79,7 @@
       <ChoiceBox fx:id="EndChooser" layoutX="488.0" layoutY="454.0" prefWidth="200.0" />
       <TableView fx:id="ConsultantsTable" layoutX="25.0" layoutY="386.0" prefHeight="160.0" prefWidth="300.0">
         <columns>
-          <TableColumn fx:id="ConsultantsNameColumn" prefWidth="285.0" text="Name" />
+          <TableColumn fx:id="ConsultantsNameColumn" prefWidth="285.0" sortable="false" text="Name" />
         </columns>
       </TableView>
       <Label layoutX="25.0" layoutY="325.0" text="Consultant">
