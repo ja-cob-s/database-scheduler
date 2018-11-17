@@ -84,14 +84,23 @@ public class Address {
     public String toString() {
         return this.addressLine1 + "\n" + this.addressLine2;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if (getClass() != obj.getClass() || obj == null) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Address other = (Address) obj;
-        return this.getAddressID() == other.getAddressID();
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Address other = (Address) obj;
+        if (this.addressID != other.addressID) {
+            return false;
+        }
+        return true;
     }
     
     @Override

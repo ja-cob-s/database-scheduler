@@ -70,16 +70,25 @@ public class Customer {
     public String toString() {
         return this.customerName;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if (getClass() != obj.getClass() || obj == null) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Customer other = (Customer) obj;
-        return this.getCustomerID() == other.getCustomerID();
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Customer other = (Customer) obj;
+        if (this.customerID != other.customerID) {
+            return false;
+        }
+        return true;
     }
-    
+
     @Override
     public int hashCode() {
          return this.customerID * 11 * this.address.getAddressID();

@@ -54,14 +54,23 @@ public class City {
     public String toString() {
         return this.city;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if (getClass() != obj.getClass() || obj == null) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        City other = (City) obj;
-        return this.getCityID() == other.getCityID();
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final City other = (City) obj;
+        if (this.cityID != other.cityID) {
+            return false;
+        }
+        return true;
     }
     
     @Override

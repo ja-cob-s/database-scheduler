@@ -34,6 +34,7 @@ public class Database {
     private static ObservableList<String> appointmentTypes = FXCollections.observableArrayList();
     private static ObservableList<Customer> customers = FXCollections.observableArrayList();
     private static ObservableList<User> users = FXCollections.observableArrayList();
+    private static ObservableList<City> cities = FXCollections.observableArrayList();
     private static int appointmentIDTracker;
     
     public Database() {
@@ -157,6 +158,10 @@ public class Database {
         return appointmentTypes;
     }
     
+    public ObservableList<City> getCities() {
+        return cities;
+    }
+    
     public int getAppointmentIDTracker() {
         return this.appointmentIDTracker;
     }
@@ -207,6 +212,24 @@ public class Database {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return appointmentTypes;
+    }
+    
+    public ObservableList<City> getCitiesList() {
+        connection = DBConnection.getConnection();
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM city;");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int cityID = rs.getInt("cityId");
+                String city = rs.getString("city");
+                Country country = this.getCountry(rs.getInt("countryId"));
+                cities.add(new City(cityID, city, country));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return cities;
     }
     
     public ObservableList<Customer> getCustomersList() {

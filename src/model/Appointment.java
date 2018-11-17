@@ -126,11 +126,20 @@ public class Appointment {
 
     @Override
     public boolean equals(Object obj) {
-        if (getClass() != obj.getClass() || obj == null) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Appointment other = (Appointment) obj;
-        return this.getAppointmentID() == other.getAppointmentID();
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Appointment other = (Appointment) obj;
+        if (this.appointmentID != other.appointmentID) {
+            return false;
+        }
+        return true;
     }
     
     @Override

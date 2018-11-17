@@ -44,14 +44,23 @@ public class User {
     public String toString() {
         return this.userName;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if (getClass() != obj.getClass() || obj == null) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        User other = (User) obj;
-        return this.getUserID() == other.getUserID();
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (this.userID != other.userID) {
+            return false;
+        }
+        return true;
     }
     
     @Override

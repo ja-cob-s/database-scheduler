@@ -44,14 +44,23 @@ public class Country {
     public String toString() {
         return this.country;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        if (getClass() != obj.getClass() || obj == null) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Country other = (Country) obj;
-        return this.getCountryID() == other.getCountryID();
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Country other = (Country) obj;
+        if (this.countryID != other.countryID) {
+            return false;
+        }
+        return true;
     }
     
     @Override
