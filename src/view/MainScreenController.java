@@ -183,9 +183,21 @@ public class MainScreenController implements Initializable {
     @FXML
     private void DeleteButtonHandler(ActionEvent event) {
         if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
-            // TODO
+            if (AppointmentsTable.getSelectionModel().getSelectedItem() != null) {
+                if (helper.showConfirmationDialog("Are you sure you want to delete this appointment?")){
+                    // User chose OK
+                    Appointment appointment = AppointmentsTable.getSelectionModel().getSelectedItem();
+                    database.deleteAppointment(appointment);
+                }
+            }
         } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
-            // TODO
+            if (CustomersTable.getSelectionModel().getSelectedItem() != null) {
+                if (helper.showConfirmationDialog("Are you sure you want to delete this customer?")){
+                    // User chose OK
+                    Customer customer = CustomersTable.getSelectionModel().getSelectedItem();
+                    database.deleteCustomer(customer);
+                }
+            }
         }
     }  
     

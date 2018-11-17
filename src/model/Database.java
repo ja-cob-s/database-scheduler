@@ -36,19 +36,16 @@ public class Database {
     }
     
     public void addAppointment(Appointment appointment) {
-        connection = DBConnection.getConnection();
-        /*
+        String sql = "INSERT INTO appointment"
+                + "(customerId, userId, title, description, location, contact, type, start, end"
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?";
         try {
-            StringBuilder sql = new StringBuilder("INSERT INTO appointment(customerId, userId, title, description, location, contact, type, start, end) ");
-            sql.append("VALUES(");
-            sql.append
             PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-
+            ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        */
+        
         myAppointments.add(appointment);
     }
     
@@ -56,7 +53,7 @@ public class Database {
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM appointment WHERE appointmentId = ?;");
             ps.setString(1, Integer.toString(appointment.getAppointmentID()));
-            ResultSet rs = ps.executeQuery();
+            ps.executeUpdate();
 
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,6 +66,14 @@ public class Database {
     }
     
     public void deleteCustomer(Customer customer) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM customer WHERE customerId = ?;");
+            ps.setString(1, Integer.toString(customer.getCustomerID()));
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         customers.remove(customer);
     }
     
