@@ -109,6 +109,14 @@ public class ScreenHelper {
         }
     }
     
+    public void showAlertDialog(String s) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Alert");
+        alert.setHeaderText(null);
+        alert.setContentText(s);
+        alert.showAndWait();
+    }
+    
     public void showWarningDialog(String s) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Error");

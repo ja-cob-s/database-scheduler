@@ -19,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Customer;
 
 /**
  * FXML Controller class
@@ -99,4 +100,7 @@ public class CustomerController implements Initializable {
     private void SaveButtonHandler(ActionEvent event) {
     }
     
+    public void setCustomer(Customer customer) {
+        
+    }
 }

@@ -7,7 +7,6 @@ package view;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
@@ -46,9 +45,19 @@ public class MainScreenController implements Initializable {
     @FXML
     private AnchorPane AppointmentViewPane;
     @FXML
-    private Button DeleteButton;
+    private Button ExitButton;
     @FXML
-    private Button EditButton;
+    private Button NewAppointmentButton;
+    @FXML
+    private Button DeleteAppointmentButton;
+    @FXML
+    private Button EditAppointmentButton;
+    @FXML
+    private Button NewCustomerButton;
+    @FXML
+    private Button DeleteCustomerButton;
+    @FXML
+    private Button EditCustomerButton;
     @FXML
     private TabPane TabPane;
     @FXML
@@ -115,10 +124,6 @@ public class MainScreenController implements Initializable {
     private TableColumn<?, ?> ReportsDescriptionColumn;
     @FXML
     private TableColumn<?, ?> ReportsLocationColumn;
-    @FXML
-    private Button NewButton;
-    @FXML
-    private Button ExitButton;
     
     private ScreenHelper helper;
     private Database database;
@@ -133,7 +138,8 @@ public class MainScreenController implements Initializable {
         
         AppointmentViewChooser.getItems().addAll("Week View", "Month View");
         AppointmentViewChooser.getSelectionModel().selectFirst();
-        AppointmentTypeChooser.getItems().addAll("Show All Types", new Separator(), "Consulting", "Meeting");
+        AppointmentTypeChooser.getItems().addAll("Show All Types", new Separator());
+        AppointmentTypeChooser.getItems().addAll(database.getAppointmentTypes());
         AppointmentTypeChooser.getSelectionModel().selectFirst();
         
         this.populateAppointmentsTable(database.getAppointments());
@@ -142,22 +148,36 @@ public class MainScreenController implements Initializable {
     
     @FXML
     private void NewButtonHandler(ActionEvent event) throws IOException {
-        Stage stage = (Stage) NewButton.getScene().getWindow();
         if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
+            Stage stage = (Stage) NewAppointmentButton.getScene().getWindow();
             helper.nextScreenHandler(stage, "Appointment.fxml");
         } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
+            Stage stage = (Stage) NewCustomerButton.getScene().getWindow();
             helper.nextScreenHandler(stage, "Customer.fxml");
         }
     }
     
     @FXML
     private void EditButtonHandler(ActionEvent event) throws IOException {
-        Stage stage = (Stage) NewButton.getScene().getWindow();
+        
         if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
-            // TODO
+            if (AppointmentsTable.getSelectionModel().getSelectedItem() != null) {
+                Stage stage = (Stage) EditAppointmentButton.getScene().getWindow();
+                AppointmentController controller = (AppointmentController) 
+                        helper.nextScreenControllerHandler(stage, "Appointment.fxml");
+                Appointment appointment = AppointmentsTable.getSelectionModel().getSelectedItem();
+                controller.setAppointment(appointment);
+            }
         } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
-            // TODO
+            if (CustomersTable.getSelectionModel().getSelectedItem() != null) {
+                Stage stage = (Stage) EditCustomerButton.getScene().getWindow();
+                CustomerController controller = (CustomerController) 
+                        helper.nextScreenControllerHandler(stage, "Customer.fxml");
+                Customer customer = CustomersTable.getSelectionModel().getSelectedItem();
+                controller.setCustomer(customer);
+            }
         }
+        
     }
     
     @FXML

@@ -28,6 +28,7 @@ public class Database {
     
     private static Connection connection;
     private static ObservableList<Appointment> myAppointments = FXCollections.observableArrayList();
+    private static ObservableList<String> appointmentTypes = FXCollections.observableArrayList();
     private static ObservableList<Customer> customers = FXCollections.observableArrayList();
     
     public Database() {
@@ -51,6 +52,14 @@ public class Database {
     }
     
     public void deleteAppointment(Appointment appointment) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM appointment WHERE appointmentId = ?;");
+            ps.setString(1, Integer.toString(appointment.getAppointmentID()));
+            ResultSet rs = ps.executeQuery();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         myAppointments.remove(appointment);
     }
     
@@ -62,8 +71,20 @@ public class Database {
         customers.remove(customer);
     }
     
-    // These getters pull data from the SQL server
     public ObservableList<Appointment> getAppointments() {
+        return myAppointments;
+    }
+    
+    public ObservableList<Customer> getCustomers() {
+        return customers;
+    }
+    
+    public ObservableList<String> getAppointmentTypes() {
+        return appointmentTypes;
+    }
+    
+    // These getters pull data from the SQL server
+    public ObservableList<Appointment> getAppointmentsList() {
         connection = DBConnection.getConnection();
         
         try {
@@ -92,7 +113,22 @@ public class Database {
         return myAppointments;
     }
     
-    public ObservableList<Customer> getCustomers() {
+    public ObservableList<String> getAppointmentTypesList() {
+        connection = DBConnection.getConnection();
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT DISTINCT type FROM appointment;");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                appointmentTypes.add(rs.getString("type"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return appointmentTypes;
+    }
+    
+    public ObservableList<Customer> getCustomersList() {
         connection = DBConnection.getConnection();
         
         try {
@@ -193,8 +229,7 @@ public class Database {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String userName = rs.getString("userName");
-                String password = rs.getString("password");
-                user = new User(userID, userName, password);
+                user = new User(userID, userName);
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
