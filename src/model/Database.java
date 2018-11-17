@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -42,23 +43,29 @@ public class Database {
         // Convert start and end back to datetime format in UTC
         ZonedDateTime startZDT = LocalDateTime.of(appointment.getDate(), appointment.getStart()).atZone(ZoneId.systemDefault());
         Timestamp startTS = Timestamp.from(startZDT.toInstant());
-        ZonedDateTime endZDT = LocalDateTime.of(appointment.getDate(), appointment.getStart()).atZone(ZoneId.systemDefault());
+        ZonedDateTime endZDT = LocalDateTime.of(appointment.getDate(), appointment.getEnd()).atZone(ZoneId.systemDefault());
         Timestamp endTS = Timestamp.from(endZDT.toInstant());
         
         String sql = "INSERT INTO appointment"
-                + "(appointmentId, customerId, userId, title, description, location, type, start, end)"
-                + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+                   + "(customerId, userId, title, description, location, contact,"
+                   + " type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateBy)"
+                   + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, appointment.getAppointmentID());
-            ps.setInt(2, appointment.getCustomer().getCustomerID());
-            ps.setInt(3, appointment.getUser().getUserID());
-            ps.setString(4, appointment.getTitle());
-            ps.setString(5, appointment.getDescription());
-            ps.setString(6, appointment.getLocation());
+            ps.setInt(1, appointment.getCustomer().getCustomerID());
+            ps.setInt(2, appointment.getUser().getUserID());
+            ps.setString(3, appointment.getTitle());
+            ps.setString(4, appointment.getDescription());
+            ps.setString(5, appointment.getLocation());
+            ps.setString(6, appointment.getUser().getUserName());
             ps.setString(7, appointment.getType());
-            ps.setTimestamp(8, startTS);
-            ps.setTimestamp(9, endTS);
+            ps.setString(8, "");
+            ps.setTimestamp(9, startTS);
+            ps.setTimestamp(10, endTS);
+            ps.setTimestamp(11, Timestamp.from(Instant.now()));
+            ps.setString(12, "admin");
+            ps.setTimestamp(13, Timestamp.from(Instant.now()));
+            ps.setString(14, "admin");
             ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
@@ -71,7 +78,34 @@ public class Database {
     }
     
     public void updateAppointment(Appointment appointment) {
-        //TODO
+        // Convert start and end back to datetime format in UTC
+        ZonedDateTime startZDT = LocalDateTime.of(appointment.getDate(), appointment.getStart()).atZone(ZoneId.systemDefault());
+        Timestamp startTS = Timestamp.from(startZDT.toInstant());
+        ZonedDateTime endZDT = LocalDateTime.of(appointment.getDate(), appointment.getEnd()).atZone(ZoneId.systemDefault());
+        Timestamp endTS = Timestamp.from(endZDT.toInstant());
+        
+        String sql = "UPDATE appointment"
+                   + " SET customerId = ?, userId = ?, title = ?, description = ?, location = ?,"
+                   + " type = ?, start = ?, end = ?, lastUpdate = ?, lastUpdateBy = ?"
+                   + " WHERE appointmentId = ?;";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, appointment.getCustomer().getCustomerID());
+            ps.setInt(2, appointment.getUser().getUserID());
+            ps.setString(3, appointment.getTitle());
+            ps.setString(4, appointment.getDescription());
+            ps.setString(5, appointment.getLocation());
+            ps.setString(6, appointment.getType());
+            ps.setTimestamp(7, startTS);
+            ps.setTimestamp(8, endTS);
+            ps.setTimestamp(9, Timestamp.from(Instant.now()));
+            ps.setString(10, "admin");
+            ps.setInt(11, appointment.getAppointmentID());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void deleteAppointment(Appointment appointment) {
