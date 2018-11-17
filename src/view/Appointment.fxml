@@ -14,7 +14,7 @@
 <AnchorPane id="AnchorPane" fx:id="AppointmentPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.AppointmentController">
    <children>
       <Button fx:id="ExitButton" layoutX="720.0" layoutY="47.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#ExitButtonHandler" prefHeight="25.0" prefWidth="60.0" text="Exit" />
-      <TableView fx:id="CustomersTable" layoutX="25.0" layoutY="146.0" prefHeight="400.0" prefWidth="300.0">
+      <TableView fx:id="CustomersTable" layoutX="25.0" layoutY="146.0" prefHeight="160.0" prefWidth="300.0">
         <columns>
           <TableColumn fx:id="CustomersNameColumn" prefWidth="285.0" text="Name" />
         </columns>
@@ -60,13 +60,11 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="SearchButton" layoutX="273.0" layoutY="111.0" mnemonicParsing="false" onAction="#SearchButtonHandler" text="Search" />
+      <Button fx:id="CustomerSearchButton" layoutX="273.0" layoutY="111.0" mnemonicParsing="false" onAction="#CustomerSearchButtonHandler" text="Search" />
       <TextField fx:id="TitleField" layoutX="487.0" layoutY="117.0" prefWidth="200.0" />
       <TextArea fx:id="DescriptionField" layoutX="487.0" layoutY="166.0" prefHeight="75.0" prefWidth="200.0" />
       <ChoiceBox fx:id="TypeChooser" layoutX="487.0" layoutY="264.0" prefWidth="200.0" />
       <DatePicker fx:id="DateChooser" layoutX="487.0" layoutY="310.0" prefWidth="200.0" />
-      <ChoiceBox fx:id="StartChooser" layoutX="487.0" layoutY="357.0" prefWidth="200.0" />
-      <ChoiceBox fx:id="EndChooser" layoutX="487.0" layoutY="405.0" prefWidth="200.0" />
       <Label fx:id="AppointmentLabel" layoutX="28.0" layoutY="47.0" text="Appointment">
          <font>
             <Font name="System Bold" size="18.0" />
@@ -77,5 +75,19 @@
             <Font size="14.0" />
          </font>
       </Button>
+      <ChoiceBox fx:id="StartChooser" layoutX="487.0" layoutY="357.0" prefWidth="200.0" />
+      <ChoiceBox fx:id="EndChooser" layoutX="487.0" layoutY="406.0" prefWidth="200.0" />
+      <TableView fx:id="ConsultantsTable" layoutX="25.0" layoutY="386.0" prefHeight="160.0" prefWidth="300.0">
+        <columns>
+          <TableColumn fx:id="ConsultantsNameColumn" prefWidth="285.0" text="Name" />
+        </columns>
+      </TableView>
+      <Label layoutX="25.0" layoutY="325.0" text="Consultant">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="ConsultantSearch" layoutX="25.0" layoutY="350.0" prefWidth="240.0" promptText="Search" />
+      <Button fx:id="ConsultantSearchButton" layoutX="273.0" layoutY="350.0" mnemonicParsing="false" onAction="#ConsultantSearchButtonHandler" text="Search" />
    </children>
 </AnchorPane>

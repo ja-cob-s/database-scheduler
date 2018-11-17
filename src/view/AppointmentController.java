@@ -7,6 +7,7 @@ package view;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,6 +28,7 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.Customer;
 import model.Database;
+import model.User;
 
 /**
  * FXML Controller class
@@ -44,7 +46,13 @@ public class AppointmentController implements Initializable {
     @FXML
     private TableColumn<Customer, String> CustomersNameColumn;
     @FXML
+    private TableView<User> ConsultantsTable;
+    @FXML
+    private TableColumn<User, String> ConsultantsNameColumn;
+    @FXML
     private TextField CustomerSearch;
+    @FXML
+    private TextField ConsultantSearch;
     @FXML
     private Label TitleLabel;
     @FXML
@@ -62,7 +70,9 @@ public class AppointmentController implements Initializable {
     @FXML
     private Label CustomerLabel;
     @FXML
-    private Button SearchButton;
+    private Button CustomerSearchButton;
+    @FXML
+    private Button ConsultantSearchButton;
     @FXML
     private TextField TitleField;
     @FXML
@@ -72,14 +82,16 @@ public class AppointmentController implements Initializable {
     @FXML
     private DatePicker DateChooser;
     @FXML
-    private ChoiceBox<?> StartChooser;
+    private ChoiceBox<LocalTime> StartChooser;
     @FXML
-    private ChoiceBox<?> EndChooser;
+    private ChoiceBox<LocalTime> EndChooser;
     @FXML
     private Label AppointmentLabel;
     @FXML
     private Button SaveButton;
     
+    private final ObservableList<LocalTime> validStartTimes = FXCollections.observableArrayList();
+    private final ObservableList<LocalTime> validEndTimes = FXCollections.observableArrayList();
     private ScreenHelper helper;
     private Database database;
     private Appointment appointment;
@@ -92,8 +104,12 @@ public class AppointmentController implements Initializable {
         helper = new ScreenHelper();
         database = new Database();
         
-        TypeChooser.getItems().addAll(database.getAppointmentTypes());
+        this.setTimes();
         this.populateCustomersTable(database.getCustomers());
+        this.populateConsultantsTable(database.getUsers());
+        TypeChooser.getItems().addAll(database.getAppointmentTypes());
+        StartChooser.getItems().addAll(validStartTimes);
+        EndChooser.getItems().addAll(validEndTimes);
     }    
 
     @FXML
@@ -118,7 +134,7 @@ public class AppointmentController implements Initializable {
     }
 
     @FXML
-    private void SearchButtonHandler(ActionEvent event) {
+    private void CustomerSearchButtonHandler(ActionEvent event) {
         String searchItem = CustomerSearch.getText();
         ObservableList<Customer> filteredCustomers = FXCollections.observableArrayList();
         boolean found = false;
@@ -140,6 +156,30 @@ public class AppointmentController implements Initializable {
                 helper.showAlertDialog("Customer not found.");
             }            
     }
+    
+    @FXML
+    private void ConsultantSearchButtonHandler(ActionEvent event) {
+        String searchItem = ConsultantSearch.getText();
+        ObservableList<User> filteredConsultants = FXCollections.observableArrayList();
+        boolean found = false;
+
+            //Displays full list if no search string
+            if (searchItem == null || searchItem.isEmpty()) {
+                this.populateCustomersTable(database.getCustomers());
+                found = true;
+            }
+            //Searches by Name
+            for (User u: database.getUsers()) {
+                if (u.getUserName().equals(searchItem)) {
+                    found = true;
+                    filteredConsultants.add(u);
+                    this.populateConsultantsTable(filteredConsultants);
+                }
+            }
+            if (found == false) {
+                helper.showAlertDialog("Customer not found.");
+            }            
+    }
 
     @FXML
     private void SaveButtonHandler(ActionEvent event) {
@@ -150,13 +190,33 @@ public class AppointmentController implements Initializable {
         CustomersTable.setItems(list);
     }
     
+    public void populateConsultantsTable(ObservableList<User> list) {
+        ConsultantsNameColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        ConsultantsTable.setItems(list);
+    }
+    
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
         
         TitleField.setText(appointment.getTitle());
         DescriptionField.setText(appointment.getDescription());
         TypeChooser.setValue(appointment.getType());
-        
+        DateChooser.setValue(appointment.getDate());
+        CustomersTable.getSelectionModel().select(appointment.getCustomer());
+        ConsultantsTable.getSelectionModel().select(appointment.getUser());
+        StartChooser.setValue(appointment.getStart());
+        EndChooser.setValue(appointment.getEnd());
+    }
+    
+    public void setTimes() {
+        LocalTime time = LocalTime.of(8, 0);
+	do {
+            validStartTimes.add(time);
+            validEndTimes.add(time);
+            time = time.plusMinutes(15);
+	} while(!time.equals(LocalTime.of(17, 15)));
+	validStartTimes.remove(validStartTimes.size() - 1);
+	validEndTimes.remove(0);
     }
     
 }

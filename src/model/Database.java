@@ -30,6 +30,7 @@ public class Database {
     private static ObservableList<Appointment> myAppointments = FXCollections.observableArrayList();
     private static ObservableList<String> appointmentTypes = FXCollections.observableArrayList();
     private static ObservableList<Customer> customers = FXCollections.observableArrayList();
+    private static ObservableList<User> users = FXCollections.observableArrayList();
     
     public Database() {
     }
@@ -77,6 +78,10 @@ public class Database {
     
     public ObservableList<Customer> getCustomers() {
         return customers;
+    }
+    
+    public ObservableList<User> getUsers() {
+        return users;
     }
     
     public ObservableList<String> getAppointmentTypes() {
@@ -144,6 +149,23 @@ public class Database {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return customers;
+    }
+    
+    public ObservableList<User> getUserList() {
+        connection = DBConnection.getConnection();
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM user;");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int userID = rs.getInt("userId");
+                String userName = rs.getString("userName");
+                users.add(new User(userID, userName));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return users;
     }
     
     public Customer getCustomer(int customerID) {
