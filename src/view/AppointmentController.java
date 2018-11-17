@@ -7,6 +7,7 @@ package view;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -78,6 +79,8 @@ public class AppointmentController implements Initializable {
     @FXML
     private TextArea DescriptionField;
     @FXML
+    private TextField LocationField;
+    @FXML
     private ChoiceBox<String> TypeChooser;
     @FXML
     private DatePicker DateChooser;
@@ -103,19 +106,27 @@ public class AppointmentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
         database = new Database();
-        
+        /* User must pick start and end times within business hours from list
+           This fulfills first bullet pointof REQUIREMENT F
+           (Business hours assumed to be 8:00am-5:00pm) */
         this.setTimes();
-        this.populateCustomersTable(database.getCustomers());
-        this.populateConsultantsTable(database.getUsers());
-        TypeChooser.getItems().addAll(database.getAppointmentTypes());
         StartChooser.getItems().addAll(validStartTimes);
-        EndChooser.getItems().addAll(validEndTimes);
+        StartChooser.getSelectionModel().select(0);
+        EndChooser.getItems().addAll(validEndTimes);    
+        EndChooser.getSelectionModel().select(3);
+        TypeChooser.getItems().addAll(database.getAppointmentTypes());
+        TypeChooser.getSelectionModel().select(0);
+        DateChooser.setValue(LocalDate.now());
+        /* User must pick customer from table populated w/DB data
+           This fulfills 3rd bullet point of REQUIREMENT F */
+        this.populateCustomersTable(database.getCustomers());
+        this.populateConsultantsTable(database.getUsers());    
     }    
 
     @FXML
     private void ExitButtonHandler(ActionEvent event) {
-        /*Terminates the application when the exit button is pressed
-          Displays confirmation dialog first*/
+        /* Terminates the application when the exit button is pressed
+           Displays confirmation dialog first*/
         if (helper.showConfirmationDialog("Are you sure you want to exit?")){
             // ... user chose OK
             System.exit(0); 
@@ -124,8 +135,8 @@ public class AppointmentController implements Initializable {
 
     @FXML
     private void CancelButtonHandler(ActionEvent event) throws IOException {
-        /*Switches to main screen and discards changes when cancelButton pressed
-          Displays confirmation dialog first*/
+        /* Switches to main screen and discards changes when cancelButton pressed
+           Displays confirmation dialog first*/
         if (helper.showConfirmationDialog("Are you sure you want to discard changes?")) {
             // ... user chose OK
             Stage stage = (Stage) CancelButton.getScene().getWindow(); 
@@ -139,12 +150,12 @@ public class AppointmentController implements Initializable {
         ObservableList<Customer> filteredCustomers = FXCollections.observableArrayList();
         boolean found = false;
 
-            //Displays full list if no search string
+            // Displays full list if no search string
             if (searchItem == null || searchItem.isEmpty()) {
                 this.populateCustomersTable(database.getCustomers());
                 found = true;
             }
-            //Searches by Name
+            // Searches by Name
             for (Customer c: database.getCustomers()) {
                 if (c.getCustomerName().equals(searchItem)) {
                     found = true;
@@ -163,12 +174,12 @@ public class AppointmentController implements Initializable {
         ObservableList<User> filteredConsultants = FXCollections.observableArrayList();
         boolean found = false;
 
-            //Displays full list if no search string
+            // Displays full list if no search string
             if (searchItem == null || searchItem.isEmpty()) {
                 this.populateCustomersTable(database.getCustomers());
                 found = true;
             }
-            //Searches by Name
+            // Searches by Name
             for (User u: database.getUsers()) {
                 if (u.getUserName().equals(searchItem)) {
                     found = true;
@@ -177,12 +188,69 @@ public class AppointmentController implements Initializable {
                 }
             }
             if (found == false) {
-                helper.showAlertDialog("Customer not found.");
+                helper.showAlertDialog("Consultant not found.");
             }            
     }
 
     @FXML
-    private void SaveButtonHandler(ActionEvent event) {
+    private void SaveButtonHandler(ActionEvent event) throws IOException {        
+        // These checks make sure all user input is valid before passing it to the database
+        Customer customer = CustomersTable.getSelectionModel().getSelectedItem();
+        if (customer == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a customer.")); }
+        
+        User user = ConsultantsTable.getSelectionModel().getSelectedItem();
+        if (user == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a consultant.")); }
+        
+        String title = helper.getString(TitleField.getText(), "Title field");
+        
+        String description = helper.getString(DescriptionField.getText(), "Description field");
+        
+        String location = helper.getString(LocationField.getText(), "Location field");
+        
+        String type = TypeChooser.getSelectionModel().getSelectedItem();
+        if (type == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a type.")); }
+        
+        LocalDate date = DateChooser.getValue();
+        if (date == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a date.")); }
+        
+        LocalTime start = StartChooser.getSelectionModel().getSelectedItem();
+        if (start == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a start time.")); }
+        
+        LocalTime end = EndChooser.getSelectionModel().getSelectedItem();
+        if (end == null) { helper.setValidInput(helper.IOExceptionHandler("Please select an end time.")); }
+        
+        if (!start.isBefore(end)) { helper.setValidInput(helper.IOExceptionHandler("Start time must be before end time.")); }
+        
+        if (!helper.getValidInput()) {
+            // Show warnings and do not save
+            helper.showAlertDialog(helper.getExceptionString());
+        } else { 
+            // All data is good...            
+            if (appointment == null) {
+                // Add a new appointment
+                // This will set appointmentID to next in sequence
+                int appointmentID = database.getAppointmentIDTracker() + 1;
+                appointment = new Appointment(appointmentID, customer, user, title, 
+                        description, location, type, date, start, end);
+                database.addAppointment(appointment);
+                
+            } else {
+                // Update an existing appointment
+                appointment.setCustomer(customer);
+                appointment.setUser(user);
+                appointment.setTitle(title);
+                appointment.setDescription(description);
+                appointment.setLocation(location);
+                appointment.setType(type);
+                appointment.setDate(date);
+                appointment.setStart(start);
+                appointment.setEnd(end);
+                database.updateAppointment(appointment);
+            }
+            Stage stage = (Stage) SaveButton.getScene().getWindow();
+            helper.nextScreenHandler(stage, "MainScreen.fxml");
+        }
+        helper.setExceptionString(""); // Clear out exception string for next run
     }
     
     public void populateCustomersTable(ObservableList<Customer> list) {
@@ -200,6 +268,7 @@ public class AppointmentController implements Initializable {
         
         TitleField.setText(appointment.getTitle());
         DescriptionField.setText(appointment.getDescription());
+        LocationField.setText(appointment.getLocation());
         TypeChooser.setValue(appointment.getType());
         DateChooser.setValue(appointment.getDate());
         CustomersTable.getSelectionModel().select(appointment.getCustomer());

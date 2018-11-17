@@ -14,6 +14,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -31,22 +33,45 @@ public class Database {
     private static ObservableList<String> appointmentTypes = FXCollections.observableArrayList();
     private static ObservableList<Customer> customers = FXCollections.observableArrayList();
     private static ObservableList<User> users = FXCollections.observableArrayList();
+    private static int appointmentIDTracker;
     
     public Database() {
     }
     
     public void addAppointment(Appointment appointment) {
+        // Convert start and end back to datetime format in UTC
+        ZonedDateTime startZDT = LocalDateTime.of(appointment.getDate(), appointment.getStart()).atZone(ZoneId.systemDefault());
+        Timestamp startTS = Timestamp.from(startZDT.toInstant());
+        ZonedDateTime endZDT = LocalDateTime.of(appointment.getDate(), appointment.getStart()).atZone(ZoneId.systemDefault());
+        Timestamp endTS = Timestamp.from(endZDT.toInstant());
+        
         String sql = "INSERT INTO appointment"
-                + "(customerId, userId, title, description, location, contact, type, start, end"
-                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?";
+                + "(appointmentId, customerId, userId, title, description, location, type, start, end)"
+                + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, appointment.getAppointmentID());
+            ps.setInt(2, appointment.getCustomer().getCustomerID());
+            ps.setInt(3, appointment.getUser().getUserID());
+            ps.setString(4, appointment.getTitle());
+            ps.setString(5, appointment.getDescription());
+            ps.setString(6, appointment.getLocation());
+            ps.setString(7, appointment.getType());
+            ps.setTimestamp(8, startTS);
+            ps.setTimestamp(9, endTS);
             ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         myAppointments.add(appointment);
+        if (appointment.getAppointmentID() > this.getAppointmentIDTracker()) {
+            this.setAppointmentIDTracker(appointment.getAppointmentID());
+        }
+    }
+    
+    public void updateAppointment(Appointment appointment) {
+        //TODO
     }
     
     public void deleteAppointment(Appointment appointment) {
@@ -62,7 +87,12 @@ public class Database {
     }
     
     public void addCustomer(Customer customer) {
+        //TODO
         customers.add(customer);
+    }
+    
+    public void updateCustomer(Customer customer) {
+        //TODO
     }
     
     public void deleteCustomer(Customer customer) {
@@ -93,6 +123,14 @@ public class Database {
         return appointmentTypes;
     }
     
+    public int getAppointmentIDTracker() {
+        return this.appointmentIDTracker;
+    }
+    
+    public void setAppointmentIDTracker(int appointmentID) {
+        this.appointmentIDTracker = appointmentID;
+    }
+    
     // These getters pull data from the SQL server
     public ObservableList<Appointment> getAppointmentsList() {
         connection = DBConnection.getConnection();
@@ -109,13 +147,12 @@ public class Database {
                 String title = rs.getString("title");
                 String description = rs.getString("description");
                 String location = rs.getString("location");
-                String contact = rs.getString("contact");
                 String type = rs.getString("type");
                 LocalDate date = rs.getTimestamp("start").toLocalDateTime().toLocalDate();
                 LocalTime start = rs.getTimestamp("start").toLocalDateTime().toLocalTime();
                 LocalTime end = rs.getTimestamp("end").toLocalDateTime().toLocalTime();
                 myAppointments.add(new Appointment(appointmentID, customer, user, title, description,
-                    location, contact, type, date, start, end));
+                    location, type, date, start, end));
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
