@@ -22,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import model.Address;
 import model.City;
 import model.Customer;
 import model.Database;
@@ -92,10 +93,19 @@ public class CustomerController implements Initializable {
         CityChooser.getSelectionModel().selectFirst();
         this.populateCustomersTable(database.getCustomers().sorted());
         
+        /* REQUIREMENT G Lambda expression for listener on Customers Table
+           populates data in the fields based on table selection
+           allows user to switch to a different customer record
+           without returning to main screen */
         CustomersTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                this.setCustomer(newSelection);
-            }
+            if (newSelection != null) { this.setCustomer(newSelection); }
+        });
+        /* REQUIREMENT G Lambda expression does not allow the user to
+           type more than 10 characters into the Postal code box, thus
+           saving from having to check the input before adding to the database */
+        PostalCodeField.setOnKeyTyped(event ->{
+            int maxCharacters = 10;
+            if(PostalCodeField.getText().length() > maxCharacters) event.consume();
         });
     }
 
@@ -122,6 +132,51 @@ public class CustomerController implements Initializable {
 
     @FXML
     private void SaveButtonHandler(ActionEvent event) {
+        // These checks make sure all user input is valid before saving
+        helper.setValidInput(true);
+        String customerName = helper.getString(NameField.getText(), "Name field");
+        
+        String[] addressString = AddressField.getText().split("\n", 2);
+        addressString[0] = helper.getString(AddressField.getText(), "Address field");
+        
+        City city = CityChooser.getSelectionModel().getSelectedItem();
+        if (city == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a city.")); }
+                
+        String postalCode = helper.getString(PostalCodeField.getText(), "Postal Code");
+        
+        // TODO: Make sure phone number is 20 chars or less and in the format 123-456-7890
+        String phoneNumber = helper.getString(PhoneNumberField.getText(), "Phone Number");
+        
+        if (!helper.getValidInput()) {
+            // Show warnings and do not save
+            helper.showAlertDialog(helper.getExceptionString());
+        } else { 
+            // All data is good...  
+            if (customer == null) {
+                /* First add the address to the table
+                   addressID is temporarily set to 0, allow the database's 
+                   auto increment to find and set a real value */
+                Address address = new Address(0, addressString[0], addressString[1], 
+                        city, postalCode, phoneNumber);
+                database.addAddress(address);
+                /* Now add a new customer
+                   customerID is temporarily set to 0, allow the database's 
+                   auto increment to find and set a real value */
+                customer = new Customer(0, customerName, address);
+                database.addCustomer(customer);
+            } else {
+                // Update an existing customer
+                customer.setCustomerName(customerName);
+                customer.getAddress().setAddressLine1(addressString[0]);
+                customer.getAddress().setAddressLine2(addressString[1]);
+                customer.getAddress().setCity(city);
+                customer.getAddress().getCity().setCountry(city.getCountry());
+                customer.getAddress().setPostalCode(postalCode);
+                customer.getAddress().setPhoneNumber(phoneNumber);
+                database.updateAddress(customer.getAddress());
+                database.updateCustomer(customer);
+            }
+        }
     }
     
     public void setCustomer(Customer customer) {

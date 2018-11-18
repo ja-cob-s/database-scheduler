@@ -35,17 +35,39 @@ public class Database {
     private static ObservableList<Customer> customers = FXCollections.observableArrayList();
     private static ObservableList<User> users = FXCollections.observableArrayList();
     private static ObservableList<City> cities = FXCollections.observableArrayList();
-    private static int appointmentIDTracker;
     
     public Database() {
     }
     
+    // These get lists that have already been pulled from the database
+    public ObservableList<Appointment> getAppointments() {
+        return myAppointments;
+    }
+    
+    public ObservableList<Customer> getCustomers() {
+        return customers;
+    }
+    
+    public ObservableList<User> getUsers() {
+        return users;
+    }
+    
+    public ObservableList<String> getAppointmentTypes() {
+        return appointmentTypes;
+    }
+    
+    public ObservableList<City> getCities() {
+        return cities;
+    }
+    
+    // These modify data in the database
     public void addAppointment(Appointment appointment) {
         // Convert start and end back to datetime format in UTC
         ZonedDateTime startZDT = LocalDateTime.of(appointment.getDate(), appointment.getStart()).atZone(ZoneId.systemDefault());
         Timestamp startTS = Timestamp.from(startZDT.toInstant());
         ZonedDateTime endZDT = LocalDateTime.of(appointment.getDate(), appointment.getEnd()).atZone(ZoneId.systemDefault());
         Timestamp endTS = Timestamp.from(endZDT.toInstant());
+        Timestamp createdTS = Timestamp.from(Instant.now());
         
         String sql = "INSERT INTO appointment"
                    + "(customerId, userId, title, description, location, contact,"
@@ -63,18 +85,27 @@ public class Database {
             ps.setString(8, "");
             ps.setTimestamp(9, startTS);
             ps.setTimestamp(10, endTS);
-            ps.setTimestamp(11, Timestamp.from(Instant.now()));
+            ps.setTimestamp(11, createdTS);
             ps.setString(12, "admin");
-            ps.setTimestamp(13, Timestamp.from(Instant.now()));
+            ps.setTimestamp(13, createdTS);
             ps.setString(14, "admin");
             ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        myAppointments.add(appointment);
-        if (appointment.getAppointmentID() > this.getAppointmentIDTracker()) {
-            this.setAppointmentIDTracker(appointment.getAppointmentID());
+        /* Allows the database to auto increment to set the appointmentID, then queries to set
+           the appointmentID of the appointment object */
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT appointmentId FROM appointment"
+                    + "WHERE createDate = ?;");
+            ps.setTimestamp(1, createdTS);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                appointment.setAppointmentID(rs.getInt("cityId"));
+                myAppointments.add(appointment);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -142,32 +173,12 @@ public class Database {
         customers.remove(customer);
     }
     
-    public ObservableList<Appointment> getAppointments() {
-        return myAppointments;
+    public void addAddress(Address address) {
+        //TODO
     }
     
-    public ObservableList<Customer> getCustomers() {
-        return customers;
-    }
-    
-    public ObservableList<User> getUsers() {
-        return users;
-    }
-    
-    public ObservableList<String> getAppointmentTypes() {
-        return appointmentTypes;
-    }
-    
-    public ObservableList<City> getCities() {
-        return cities;
-    }
-    
-    public int getAppointmentIDTracker() {
-        return this.appointmentIDTracker;
-    }
-    
-    public void setAppointmentIDTracker(int appointmentID) {
-        this.appointmentIDTracker = appointmentID;
+    public void updateAddress(Address address) {
+        //TODO
     }
     
     // These getters pull data from the SQL server

@@ -68,6 +68,6 @@
       </Button>
       <TextField fx:id="CountryField" disable="true" editable="false" layoutX="487.0" layoutY="311.0" prefWidth="200.0" />
       <TextField fx:id="PostalCodeField" layoutX="487.0" layoutY="358.0" prefWidth="200.0" />
-      <TextField fx:id="PhoneNumberField" layoutX="487.0" layoutY="406.0" prefWidth="200.0" />
+      <TextField fx:id="PhoneNumberField" layoutX="487.0" layoutY="406.0" prefWidth="200.0" promptText="123-456-7890" />
    </children>
 </AnchorPane>

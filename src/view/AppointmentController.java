@@ -200,7 +200,8 @@ public class AppointmentController implements Initializable {
 
     @FXML
     private void SaveButtonHandler(ActionEvent event) throws IOException {        
-        // These checks make sure all user input is valid before passing it to the database
+        // These checks make sure all user input is valid before saving
+        helper.setValidInput(true);
         Customer customer = CustomersTable.getSelectionModel().getSelectedItem();
         if (customer == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a customer.")); }
         
@@ -233,10 +234,10 @@ public class AppointmentController implements Initializable {
         } else { 
             // All data is good...            
             if (appointment == null) {
-                // Add a new appointment
-                // This will set appointmentID to next in sequence
-                int appointmentID = database.getAppointmentIDTracker() + 1;
-                appointment = new Appointment(appointmentID, customer, user, title, 
+                /* Add a new appointment
+                   appointmentID is temporarily set to 0, allow the database's 
+                   auto increment to find and set a real value */
+                appointment = new Appointment(0, customer, user, title, 
                         description, location, type, date, start, end);
                 database.addAppointment(appointment);
                 

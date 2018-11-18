@@ -46,7 +46,7 @@ public class City {
         this.city = city;
     }
 
-    public void setCountryID(Country country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
     
