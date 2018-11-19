@@ -5,6 +5,7 @@
  */
 package view;
 
+import database.scheduler.DatabaseScheduler;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -12,6 +13,8 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -141,7 +144,7 @@ public class MainScreenController implements Initializable {
     
     private ScreenHelper helper;
     private Database database;
-    private ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    private ObservableList<Appointment> allAppointments;
     private FilteredList<Appointment> filteredAppointments;
 
     /**
@@ -177,23 +180,17 @@ public class MainScreenController implements Initializable {
         
         this.populateAppointmentsTable(this.getFilteredAppointments());
         this.populateCustomersTable(database.getCustomers().sorted());
-        this.populateReportsTables(database.getAppointments(), database.getCustomers());
+        this.populateReportsTables();
         
-        /*TabPane.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-             @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if(newValue.intValue() == 0) {
-                    // User switched to Appointments tab
-                    System.out.println("0");
-                } else if(newValue.intValue() == 1) {
-                    // User switched to Customers tab
-                    System.out.println("1");
-                } if(newValue.intValue() == 2) {
-                    // User switched to Reports tab
-                    System.out.println("2");
-                } 
+        // REQUIREMENT H - provide an alert if there is an appointment within 15 minutes of user login
+        if (DatabaseScheduler.isFirstView()) {
+            if (filteredAppointments.get(0).getDate().equals(LocalDate.now()) &&
+                    filteredAppointments.get(0).getStart().isAfter(LocalTime.now().minusMinutes(1)) &&
+                    filteredAppointments.get(0).getStart().isBefore(LocalTime.now().plusMinutes(15))) {
+                helper.showAlertDialog("Reminder: You have appointment(s) within the next 15 minutes.");
             }
-        }); */
+            DatabaseScheduler.setFirstView(false);
+        }
     }    
     
     @FXML
@@ -265,7 +262,7 @@ public class MainScreenController implements Initializable {
         Object type = AppointmentTypeChooser.getSelectionModel().getSelectedItem();
         int view = AppointmentViewChooser.getSelectionModel().getSelectedIndex();
         
-        // REQUIREMENT G - Lambda expression for efficient sorting
+        // REQUIREMENT G - Lambda expressions for efficient sorting
         if (type.toString().equals("Show All Types")) {
             if (view == 0) {
                 // Week view showing all types
@@ -313,7 +310,7 @@ public class MainScreenController implements Initializable {
         CustomersTable.setItems(list);
     }
     
-    public void populateReportsTables(ObservableList<Appointment> appointmentList, ObservableList<Customer> customerList) {
+    public void populateReportsTables() {
         /* REQUIREMENT I - ability to generate each of the following reports:
            - number of appointment types by month
            - the schedule for each consultant
@@ -330,6 +327,7 @@ public class MainScreenController implements Initializable {
         if (database.getUsers().isEmpty()) { database.getUserList(); }
         ConsultantReportConsultantColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
         ConsultantReportTable1.setItems(database.getUsers());
+        // REQUIREMENT G - Lambda expressios for efficient filtering
         ConsultantReportTable1.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) { 
                 consultantReportList.setPredicate(s -> s.getUser().equals(ConsultantReportTable1.getSelectionModel().getSelectedItem()));

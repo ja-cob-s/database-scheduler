@@ -19,7 +19,15 @@ import util.DBConnection;
  */
 public class DatabaseScheduler extends Application {
     
-   
+    private static boolean firstView;
+
+    public static boolean isFirstView() {
+        return firstView;
+    }
+
+    public static void setFirstView(boolean firstView) {
+        DatabaseScheduler.firstView = firstView;
+    }
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -35,7 +43,8 @@ public class DatabaseScheduler extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {        
+    public static void main(String[] args) {
+        DatabaseScheduler.setFirstView(true);
         DBConnection.connect();  
         Database database = new Database(); 
         database.getAppointmentsList();

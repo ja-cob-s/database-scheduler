@@ -5,7 +5,9 @@
  */
 package view;
 
+import java.net.URL;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -22,8 +24,9 @@ import javafx.util.Pair;
  *
  * @author jnsch
  */
-public class Login {
-        public void showLoginDialog() {
+public class LoginController {
+       
+    public void showLoginDialog() {
         // Create the custom dialog.
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Login Dialog");
