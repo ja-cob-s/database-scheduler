@@ -21,7 +21,8 @@ import javafx.collections.ObservableList;
 import util.DBConnection;
 
 /**
- *
+ * Class to handle all interactions with the SQL database
+ * with the exception of connecting/disconnecting
  * @author jnsch
  */
 public class Database {
@@ -240,7 +241,7 @@ public class Database {
         Timestamp createdTS = Timestamp.from(Instant.now());
         
         String sql = "INSERT INTO address"
-                   + "(address, address2, cityId, postalCode, phone"
+                   + "(address, address2, cityId, postalCode, phone,"
                    + " createDate, createdBy, lastUpdate, lastUpdateBy)"
                    + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);";
         try {
@@ -276,7 +277,7 @@ public class Database {
     public void updateAddress(Address address) {
         String sql = "UPDATE address"
                    + " SET address = ?, address2 = ?, cityId = ?, postalCode = ?,"
-                   + " phone, lastUpdate = ?, lastUpdateBy = ?"
+                   + " phone = ?, lastUpdate = ?, lastUpdateBy = ?"
                    + " WHERE addressId = ?;";
         
         try {
@@ -285,9 +286,10 @@ public class Database {
             ps.setString(2, address.getAddressLine2());
             ps.setInt(3, address.getCity().getCityID());
             ps.setString(4, address.getPostalCode());
-            ps.setTimestamp(5, Timestamp.from(Instant.now()));
-            ps.setString(6, USER_NAME);
-            ps.setInt(7, address.getAddressID());
+            ps.setString(5, address.getPhoneNumber());
+            ps.setTimestamp(6, Timestamp.from(Instant.now()));
+            ps.setString(7, USER_NAME);
+            ps.setInt(8, address.getAddressID());
             ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();

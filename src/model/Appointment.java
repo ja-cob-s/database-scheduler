@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 /**
- *
+ * Class to handle appointment records
  * @author jnsch
  */
 public class Appointment {

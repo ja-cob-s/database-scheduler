@@ -21,7 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 /**
- *
+ * Handles the login sequence
  * @author jnsch
  */
 public class LoginController {

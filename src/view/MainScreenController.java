@@ -148,7 +148,8 @@ public class MainScreenController implements Initializable {
     private FilteredList<Appointment> filteredAppointments;
 
     /**
-     * Initializes the controller class.
+     * Initializes the controller class that controls the main screen which
+     * displays appointment list, customer list, and reports
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

@@ -6,7 +6,7 @@
 package model;
 
 /**
- *
+ * Class to handle User records 
  * @author jnsch
  */
 public class User {

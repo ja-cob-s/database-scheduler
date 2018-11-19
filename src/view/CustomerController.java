@@ -28,8 +28,8 @@ import model.Customer;
 import model.Database;
 
 /**
- * FXML Controller class
- *
+ * FXML Controller class controls the Customer screen which allows the user to
+ * add or update customer records
  * @author jnsch
  */
 public class CustomerController implements Initializable {
@@ -131,52 +131,66 @@ public class CustomerController implements Initializable {
     }
 
     @FXML
-    private void SaveButtonHandler(ActionEvent event) {
+    private void SaveButtonHandler(ActionEvent event) throws IOException {
         // These checks make sure all user input is valid before saving
         helper.setValidInput(true);
         String customerName = helper.getString(NameField.getText(), "Name field");
         
         String[] addressString = AddressField.getText().split("\n", 2);
-        addressString[0] = helper.getString(AddressField.getText(), "Address field");
+        String addressLine1 = addressString[0];
+        String addressLine2;
+        if (addressString.length > 1) {
+            addressLine2 = addressString[1];
+        } else {
+            addressLine2 = "";
+        }
+        helper.getString(addressLine1, "Address field");
         
         City city = CityChooser.getSelectionModel().getSelectedItem();
-        if (city == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a city.")); }
                 
         String postalCode = helper.getString(PostalCodeField.getText(), "Postal Code");
         
         // TODO: Make sure phone number is 20 chars or less and in the format 123-456-7890
         String phoneNumber = helper.getString(PhoneNumberField.getText(), "Phone Number");
         
-        if (!helper.getValidInput()) {
+        if (!helper.isValidInput()) {
             // Show warnings and do not save
             helper.showAlertDialog(helper.getExceptionString());
         } else { 
             // All data is good...  
-            if (customer == null) {
+            if (this.getCustomer() == null) {
                 /* First add the address to the table
                    addressID is temporarily set to 0, allow the database's 
                    auto increment to find and set a real value */
-                Address address = new Address(0, addressString[0], addressString[1], 
+                Address address = new Address(0, addressLine1, addressLine2, 
                         city, postalCode, phoneNumber);
                 database.addAddress(address);
                 /* Now add a new customer
                    customerID is temporarily set to 0, allow the database's 
                    auto increment to find and set a real value */
-                customer = new Customer(0, customerName, address);
+                this.setCustomer(new Customer(0, customerName, address));
                 database.addCustomer(customer);
             } else {
                 // Update an existing customer
-                customer.setCustomerName(customerName);
-                customer.getAddress().setAddressLine1(addressString[0]);
-                customer.getAddress().setAddressLine2(addressString[1]);
-                customer.getAddress().setCity(city);
-                customer.getAddress().getCity().setCountry(city.getCountry());
-                customer.getAddress().setPostalCode(postalCode);
-                customer.getAddress().setPhoneNumber(phoneNumber);
-                database.updateAddress(customer.getAddress());
-                database.updateCustomer(customer);
+                this.getCustomer().setCustomerName(customerName);
+                this.getCustomer().getAddress().setAddressLine1(addressLine1);
+                this.getCustomer().getAddress().setAddressLine2(addressLine2);
+                this.getCustomer().getAddress().setCity(city);
+                this.getCustomer().getAddress().getCity().setCountry(city.getCountry());
+                this.getCustomer().getAddress().setPostalCode(postalCode);
+                this.getCustomer().getAddress().setPhoneNumber(phoneNumber);
+                database.updateAddress(this.getCustomer().getAddress());
+                database.updateCustomer(this.getCustomer());
             }
+            Stage stage = (Stage) SaveButton.getScene().getWindow();
+            helper.nextScreenHandler(stage, "MainScreen.fxml");
         }
+        
+        helper.setExceptionString(""); // Clear out exception string for next run
+    }
+    
+    public Customer getCustomer() {
+        return this.customer;
     }
     
     public void setCustomer(Customer customer) {

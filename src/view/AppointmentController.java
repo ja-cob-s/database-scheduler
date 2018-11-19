@@ -33,8 +33,8 @@ import model.Database;
 import model.User;
 
 /**
- * FXML Controller class
- *
+ * FXML Controller class controls the Appointment screen which allows the user to
+ * add or update appointment records
  * @author jnsch
  */
 public class AppointmentController implements Initializable {
@@ -227,42 +227,41 @@ public class AppointmentController implements Initializable {
         String location = helper.getString(LocationField.getText(), "Location field");
         
         String type = TypeChooser.getSelectionModel().getSelectedItem();
-        if (type == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a type.")); }
         
         LocalDate date = DateChooser.getValue();
-        if (date == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a date.")); }
         
         LocalTime start = StartChooser.getSelectionModel().getSelectedItem();
-        if (start == null) { helper.setValidInput(helper.IOExceptionHandler("Please select a start time.")); }
         
         LocalTime end = EndChooser.getSelectionModel().getSelectedItem();
-        if (end == null) { helper.setValidInput(helper.IOExceptionHandler("Please select an end time.")); }
         
-        if (!helper.getValidInput()) {
+        // REQUIREMENT F - prevents scheduling overlapping appointments for the same user
+        this.overlappingAppointmentChecker(user, date, start, end);
+        
+        if (!helper.isValidInput()) {
             // Show warnings and do not save
             helper.showAlertDialog(helper.getExceptionString());
         } else { 
             // All data is good...            
-            if (appointment == null) {
+            if (this.getAppointment() == null) {
                 /* Add a new appointment
                    appointmentID is temporarily set to 0, allow the database's 
                    auto increment to find and set a real value */
-                appointment = new Appointment(0, customer, user, title, 
-                        description, location, type, date, start, end);
-                database.addAppointment(appointment);
+                this.setAppointment(new Appointment(0, customer, user, title, 
+                        description, location, type, date, start, end));
+                database.addAppointment(this.getAppointment());
                 
             } else {
                 // Update an existing appointment
-                appointment.setCustomer(customer);
-                appointment.setUser(user);
-                appointment.setTitle(title);
-                appointment.setDescription(description);
-                appointment.setLocation(location);
-                appointment.setType(type);
-                appointment.setDate(date);
-                appointment.setStart(start);
-                appointment.setEnd(end);
-                database.updateAppointment(appointment);
+                this.getAppointment().setCustomer(customer);
+                this.getAppointment().setUser(user);
+                this.getAppointment().setTitle(title);
+                this.getAppointment().setDescription(description);
+                this.getAppointment().setLocation(location);
+                this.getAppointment().setType(type);
+                this.getAppointment().setDate(date);
+                this.getAppointment().setStart(start);
+                this.getAppointment().setEnd(end);
+                database.updateAppointment(this.getAppointment());
             }
             Stage stage = (Stage) SaveButton.getScene().getWindow();
             helper.nextScreenHandler(stage, "MainScreen.fxml");
@@ -278,6 +277,10 @@ public class AppointmentController implements Initializable {
     public void populateConsultantsTable(ObservableList<User> list) {
         ConsultantsNameColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
         ConsultantsTable.setItems(list);
+    }
+    
+    public Appointment getAppointment() {
+        return this.appointment;
     }
     
     public void setAppointment(Appointment appointment) {
@@ -303,6 +306,26 @@ public class AppointmentController implements Initializable {
 	} while(!time.equals(LocalTime.of(17, 15)));
 	validStartTimes.remove(validStartTimes.size() - 1);
 	validEndTimes.remove(0);
+    }
+    
+    public void overlappingAppointmentChecker(User user, LocalDate date, LocalTime start, LocalTime end) {
+        final int appointmentID;
+        if (this.getAppointment() != null) {
+            appointmentID = this.getAppointment().getAppointmentID();
+        } else {
+            appointmentID = 0;
+        }
+        /* REQUIREMENT F - prevent scheduling overlapping appointments and REQUIREMENT G - lamba expression for efficient filtering
+           Predicate reads appointmentIDs are not the same AND users are the same AND dates are the same AND EITHER
+           (new appt start time is before other appt end time AND new appt start time is after other appt start time) OR
+           (new appt end time is after other appt start time AND new appt end time is before other appt end time)*/
+        FilteredList<Appointment> filteredAppointments = new FilteredList<>(database.getAppointments(), s -> 
+            !(s.getAppointmentID() == appointmentID) && s.getUser().equals(user) && s.getDate().equals(date) &&
+            ((start.isBefore(s.getEnd()) && start.isAfter(s.getStart())) || (end.isAfter(s.getStart()) && end.isBefore(s.getEnd()))));
+        if (!filteredAppointments.isEmpty()) {
+            helper.setValidInput(false);
+            helper.setExceptionString("Appointment overlaps with another appointment");
+        }
     }
     
 }

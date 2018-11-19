@@ -6,7 +6,7 @@
 package model;
 
 /**
- *
+ * Class to handle Country records
  * @author jnsch
  */
 public class Country {

@@ -6,7 +6,7 @@
 package model;
 
 /**
- *
+ * Class to handle City records
  * @author jnsch
  */
 public class City {

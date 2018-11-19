@@ -6,7 +6,7 @@
 package model;
 
 /**
- *
+ * Class to handle address records
  * @author jnsch
  */
 public class Address {

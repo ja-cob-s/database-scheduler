@@ -6,7 +6,7 @@
 package model;
 
 /**
- *
+ * Class to handle the Appointment Report, part of REQUIREMENT I
  * @author jnsch
  */
 public class AppointmentReport {

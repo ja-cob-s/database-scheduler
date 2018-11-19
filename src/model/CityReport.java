@@ -6,7 +6,7 @@
 package model;
 
 /**
- *
+ * Class to handle the City Report, part of REQUIREMENT I
  * @author jnsch
  */
 public class CityReport {

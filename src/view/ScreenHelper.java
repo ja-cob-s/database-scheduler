@@ -28,7 +28,7 @@ public class ScreenHelper {
         this.exceptionString = "";
     }
     
-    public boolean getValidInput() {
+    public boolean isValidInput() {
         return this.validInput;
     }
     
@@ -120,13 +120,6 @@ public class ScreenHelper {
         try { i = Integer.parseInt(s); }
         catch(Exception e) { this.setValidInput(IOExceptionHandler("Invalid input in: " + IOExceptionText)); }
         return i;
-    }
-    
-    public double getDouble(String s, String IOExceptionText) {
-        double d = 0;
-        try { d = Double.parseDouble(s); }
-        catch(Exception e) { this.setValidInput(IOExceptionHandler("Invalid input in: " + IOExceptionText)); }
-        return d;
     }
     
     public String getString(String s, String IOExceptionText) {
