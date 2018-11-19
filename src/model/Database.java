@@ -105,7 +105,7 @@ public class Database {
         try {
             PreparedStatement ps;
             ps = connection.prepareStatement("SELECT appointmentId FROM appointment"
-                                           + "WHERE createDate = ?;");
+                                           + " WHERE createDate = ?;");
             ps.setTimestamp(1, createdTS);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -193,7 +193,7 @@ public class Database {
         try {
             PreparedStatement ps;
             ps = connection.prepareStatement("SELECT customerId FROM customer"
-                                           + "WHERE createDate = ?;");
+                                           + " WHERE createDate = ?;");
             ps.setTimestamp(1, createdTS);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -265,7 +265,7 @@ public class Database {
         try {
             PreparedStatement ps;
             ps = connection.prepareStatement("SELECT addressId FROM address"
-                                           + "WHERE createDate = ?;");
+                                           + " WHERE createDate = ?;");
             ps.setTimestamp(1, createdTS);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
