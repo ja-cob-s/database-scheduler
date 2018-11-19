@@ -5,7 +5,6 @@
  */
 package model;
 
-import database.scheduler.DatabaseScheduler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,8 +16,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import util.DBConnection;
@@ -99,7 +96,7 @@ public class Database {
             ps.setString(14, USER_NAME);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         
         try {
@@ -113,7 +110,7 @@ public class Database {
                 myAppointments.add(appointment);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
@@ -147,7 +144,7 @@ public class Database {
             ps.setInt(11, appointment.getAppointmentID());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
@@ -159,7 +156,7 @@ public class Database {
             ps.executeUpdate();
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         myAppointments.remove(appointment);
     }
@@ -187,7 +184,7 @@ public class Database {
             ps.setString(7, USER_NAME);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         
         try {
@@ -201,7 +198,7 @@ public class Database {
                 customers.add(customer);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
@@ -219,7 +216,7 @@ public class Database {
             ps.setInt(5, customer.getCustomerID());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
@@ -231,7 +228,7 @@ public class Database {
             ps.executeUpdate();
 
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         customers.remove(customer);
     }
@@ -259,7 +256,7 @@ public class Database {
             ps.setString(9, USER_NAME);
             ps.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         
         try {
@@ -272,7 +269,7 @@ public class Database {
                 address.setAddressID(rs.getInt("addressId"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
@@ -293,7 +290,7 @@ public class Database {
             ps.setInt(7, address.getAddressID());
             ps.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
@@ -321,7 +318,7 @@ public class Database {
                         description, location, type, date, start, end));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return myAppointments;
     }
@@ -337,7 +334,7 @@ public class Database {
                 appointmentTypes.add(rs.getString("type"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return appointmentTypes;
     }
@@ -355,7 +352,7 @@ public class Database {
                 cities.add(new City(cityID, city, country));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return cities;
     }
@@ -373,7 +370,7 @@ public class Database {
                 customers.add(new Customer(customerID, customerName, address));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return customers;
     }
@@ -390,7 +387,7 @@ public class Database {
                 users.add(new User(userID, userName));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return users;
     }
@@ -409,7 +406,7 @@ public class Database {
                 customer = new Customer(customerID, customerName, address);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return customer;
     }
@@ -431,7 +428,7 @@ public class Database {
                 address = new Address(addressID, addressLine1, addressLine2, city, postalCode, phoneNumber);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return address;
     }
@@ -450,7 +447,7 @@ public class Database {
                 city = new City(cityID, cityName, country);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return city;
     }
@@ -468,7 +465,7 @@ public class Database {
                 country = new Country(countryID, countryName);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return country;
     }
@@ -486,8 +483,55 @@ public class Database {
                 user = new User(userID, userName);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseScheduler.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
         return user;
+    }
+    
+    public ObservableList<AppointmentReport> getAppointmentReport() {
+        connection = DBConnection.getConnection();
+        ObservableList<AppointmentReport> appointmentReport = FXCollections.observableArrayList();
+        String sql = "SELECT MONTH(start) AS 'MonthNum', MONTHNAME(start) AS 'Month',"
+                   + " type as 'Type', COUNT(*) as 'Amount'"
+                   + " FROM appointment"
+                   + " GROUP BY Month, Type"
+                   + " ORDER BY MonthNum;";
+        try {
+            PreparedStatement ps;
+            ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String month = rs.getString("Month");
+                String type = rs.getString("Type");
+                int amount = rs.getInt("Amount");
+                appointmentReport.add(new AppointmentReport(month, type, amount));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }        
+        return appointmentReport;
+    }
+    
+    public ObservableList<CityReport> getCityReport() {
+        connection = DBConnection.getConnection();
+        ObservableList<CityReport> cityReport = FXCollections.observableArrayList();
+        String sql = "SELECT city.city, COUNT(city)"
+                   + " FROM customer, address, city"
+                   + " WHERE customer.addressId = address.addressId"
+                   + " AND address.cityId = city.cityId"
+                   + " GROUP BY city;";
+        try {
+            PreparedStatement ps;
+            ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String city = rs.getString("city");
+                int customers = rs.getInt("COUNT(city)");
+                cityReport.add(new CityReport(city, customers));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }        
+        return cityReport;
     }
 }

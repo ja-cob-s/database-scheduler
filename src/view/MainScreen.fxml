@@ -83,7 +83,7 @@
                                        <children>
                                           <TableView fx:id="ConsultantReportTable1" maxHeight="496.0" maxWidth="120.0" minHeight="496.0" minWidth="120.0" prefHeight="496.0" prefWidth="120.0">
                                             <columns>
-                                              <TableColumn fx:id="ConsultantReportConsultantColumn" prefWidth="120.0" text="Consultant" />
+                                              <TableColumn fx:id="ConsultantReportConsultantColumn" prefWidth="105.0" text="Consultant" />
                                             </columns>
                                           </TableView>
                                           <TableView fx:id="ConsultantReportTable2" layoutX="120.0" maxHeight="496.0" maxWidth="678.0" minHeight="496.0" minWidth="678.0" prefHeight="496.0" prefWidth="678.0">
@@ -107,7 +107,6 @@
                                             <columns>
                                               <TableColumn fx:id="CustomerReportCityColumn" prefWidth="275.0" text="City" />
                                               <TableColumn fx:id="CustomerReportCustomerColumn" prefWidth="150.0" text="Number of Customers" />
-                                                <TableColumn fx:id="CustomerReportAppointmentColumn" prefWidth="225.0" text="Number of Scheduled Appointments" />
                                             </columns>
                                           </TableView>
                                        </children></AnchorPane>

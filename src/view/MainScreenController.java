@@ -21,8 +21,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -33,7 +31,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Address;
 import model.Appointment;
+import model.AppointmentReport;
 import model.City;
+import model.CityReport;
 import model.Country;
 import model.Customer;
 import model.Database;
@@ -105,39 +105,37 @@ public class MainScreenController implements Initializable {
     @FXML
     private Tab ReportsTab;
     @FXML
-    private TableView<?> AppointmentReportTable;
+    private TableView<AppointmentReport> AppointmentReportTable;
     @FXML
-    private TableColumn<?, ?> AppointmentReportMonthColumn;
+    private TableColumn<AppointmentReport, String> AppointmentReportMonthColumn;
     @FXML
-    private TableColumn<?, ?> AppointmentReportTypeColumn;
+    private TableColumn<AppointmentReport, String> AppointmentReportTypeColumn;
     @FXML
-    private TableColumn<?, ?> AppointmentReportNumberColumn;
+    private TableColumn<AppointmentReport, Integer> AppointmentReportNumberColumn;
     @FXML
-    private TableView<?> ConsultantReportTable1;
+    private TableView<User> ConsultantReportTable1;
     @FXML
-    private TableColumn<?, ?> ConsultantReportConsultantColumn;
+    private TableColumn<User, String> ConsultantReportConsultantColumn;
     @FXML
-    private TableView<?> ConsultantReportTable2;
+    private TableView<Appointment> ConsultantReportTable2;
     @FXML
-    private TableColumn<?, ?> ConsultantReportDateColumn;
+    private TableColumn<Appointment, LocalDate> ConsultantReportDateColumn;
     @FXML
-    private TableColumn<?, ?> ConsultantReportStartColumn;
+    private TableColumn<Appointment, LocalTime> ConsultantReportStartColumn;
     @FXML
-    private TableColumn<?, ?> ConsultantReportEndColumn;
+    private TableColumn<Appointment, LocalTime> ConsultantReportEndColumn;
     @FXML
-    private TableColumn<?, ?> ConsultantReportCustomerColumn;
+    private TableColumn<Appointment, Customer> ConsultantReportCustomerColumn;
     @FXML
-    private TableColumn<?, ?> ConsultantReportDescriptionColumn;
+    private TableColumn<Appointment, String> ConsultantReportDescriptionColumn;
     @FXML
-    private TableColumn<?, ?> ConsultantReportLocationColumn;
+    private TableColumn<Appointment, String> ConsultantReportLocationColumn;
     @FXML
-    private TableView<?> CustomerReportTable;
+    private TableView<CityReport> CustomerReportTable;
     @FXML
-    private TableColumn<?, ?> CustomerReportCityColumn;
+    private TableColumn<CityReport, String> CustomerReportCityColumn;
     @FXML
-    private TableColumn<?, ?> CustomerReportCustomerColumn;
-    @FXML
-    private TableColumn<?, ?> CustomerReportAppointmentColumn;
+    private TableColumn<CityReport, Integer> CustomerReportCustomerColumn;
     @FXML
     private Accordion ReportsAccordian;
     
@@ -179,6 +177,23 @@ public class MainScreenController implements Initializable {
         
         this.populateAppointmentsTable(this.getFilteredAppointments());
         this.populateCustomersTable(database.getCustomers().sorted());
+        this.populateReportsTables(database.getAppointments(), database.getCustomers());
+        
+        /*TabPane.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+             @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(newValue.intValue() == 0) {
+                    // User switched to Appointments tab
+                    System.out.println("0");
+                } else if(newValue.intValue() == 1) {
+                    // User switched to Customers tab
+                    System.out.println("1");
+                } if(newValue.intValue() == 2) {
+                    // User switched to Reports tab
+                    System.out.println("2");
+                } 
+            }
+        }); */
     }    
     
     @FXML
@@ -296,6 +311,44 @@ public class MainScreenController implements Initializable {
         CustomersPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         
         CustomersTable.setItems(list);
+    }
+    
+    public void populateReportsTables(ObservableList<Appointment> appointmentList, ObservableList<Customer> customerList) {
+        /* REQUIREMENT I - ability to generate each of the following reports:
+           - number of appointment types by month
+           - the schedule for each consultant
+           - one additional report of your choice (number of customers displayed by city)*/
+        
+        // Number of appointment types by month
+        AppointmentReportMonthColumn.setCellValueFactory(new PropertyValueFactory<>("month"));
+        AppointmentReportTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        AppointmentReportNumberColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        AppointmentReportTable.setItems(database.getAppointmentReport());
+        
+        // Schedule for each consultant
+        FilteredList<Appointment> consultantReportList = new FilteredList<>(allAppointments, s -> true);
+        if (database.getUsers().isEmpty()) { database.getUserList(); }
+        ConsultantReportConsultantColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        ConsultantReportTable1.setItems(database.getUsers());
+        ConsultantReportTable1.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) { 
+                consultantReportList.setPredicate(s -> s.getUser().equals(ConsultantReportTable1.getSelectionModel().getSelectedItem()));
+            }
+        });
+        ConsultantReportTable1.getSelectionModel().select(0);
+        
+        ConsultantReportDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        ConsultantReportStartColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
+        ConsultantReportEndColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
+        ConsultantReportCustomerColumn.setCellValueFactory(new PropertyValueFactory<>("customer"));
+        ConsultantReportDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        ConsultantReportLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        ConsultantReportTable2.setItems(consultantReportList);
+        
+        // Number of customers by city
+        CustomerReportCityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
+        CustomerReportCustomerColumn.setCellValueFactory(new PropertyValueFactory<>("customers"));
+        CustomerReportTable.setItems(database.getCityReport());
     }
     
     public FilteredList<Appointment> getFilteredAppointments() {
