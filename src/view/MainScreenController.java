@@ -152,8 +152,8 @@ public class MainScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
         database = new Database();
-        database.getAppointmentsList();
-        database.getCustomersList();
+        if (database.getAppointments().isEmpty()) { database.getAppointmentsList(); }
+        if (database.getCustomers().isEmpty()) { database.getCustomersList(); }
         allAppointments = database.getAppointments();
         
         // Sort appointments by date before filtering

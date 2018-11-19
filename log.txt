@@ -1,0 +1,8 @@
+Nov 19, 2018 3:49:23 PM view.LoginController LoginButtonHandler
+WARNING: Invalid login attempt
+Nov 19, 2018 3:49:51 PM view.LoginController LoginButtonHandler
+WARNING: Invalid login attempt
+Nov 19, 2018 3:49:53 PM view.LoginController LoginButtonHandler
+WARNING: Invalid login attempt
+Nov 19, 2018 3:50:01 PM view.LoginController LoginButtonHandler
+INFO: Successful login as test

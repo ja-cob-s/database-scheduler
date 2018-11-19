@@ -10,6 +10,10 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -106,16 +110,28 @@ public class LoginController implements Initializable {
         String userName = UserNameField.getText();
         String password = PasswordField.getText();
         
+        // REQUIREMENT J - Track user activity by recording timestamps for user logins in a .txt file
+        Logger log = Logger.getLogger("log.txt");
+        
+        FileHandler fh = new FileHandler("log.txt", true);
+        SimpleFormatter sf = new SimpleFormatter();
+        fh.setFormatter(sf);
+        log.addHandler(fh);
+        
+        // REQUIREMENT F - Validates username and password
         if (userName.isEmpty() || password.isEmpty()) {
             ErrorLabel.setText(noInput);
             ErrorLabel.setVisible(true);
+            log.warning("Invalid login attempt");
         } else {
             User user = database.validateUser(userName, password);
 
             if (user == null) {
                 ErrorLabel.setText(invalidInput);
                 ErrorLabel.setVisible(true);
+                log.warning("Invalid login attempt");
             } else {
+                log.log(Level.INFO, "Successful login as {0}", userName);
                 Database.setCurrentUser(user);
                 Stage stage = (Stage) LoginButton.getScene().getWindow(); 
                 Parent root;   
@@ -126,6 +142,7 @@ public class LoginController implements Initializable {
                 stage.show();
             }
         }
+        fh.close();
     }
     
 }

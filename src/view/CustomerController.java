@@ -89,6 +89,7 @@ public class CustomerController implements Initializable {
         if (database.getCities().isEmpty()) { database.getCitiesList(); }
         cities = database.getCities();
         
+        CityChooser.setOnAction(this::CityChooserHandler);
         CityChooser.getItems().addAll(cities.sorted());
         CityChooser.getSelectionModel().selectFirst();
         this.populateCustomersTable(database.getCustomers().sorted());
@@ -108,7 +109,13 @@ public class CustomerController implements Initializable {
             if(PostalCodeField.getText().length() > maxCharacters) event.consume();
         });
     }
-
+    
+    @FXML
+    private void CityChooserHandler(ActionEvent event) {
+        // Fills in the appropriate country for the city chosen.
+        CountryField.setText(CityChooser.getSelectionModel().getSelectedItem().getCountry().toString());
+    }
+    
     @FXML
     private void ExitButtonHandler(ActionEvent event) {
         /*Terminates the application when the exit button is pressed
