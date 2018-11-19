@@ -31,7 +31,7 @@ public class DatabaseScheduler extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/view/MainScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
         
         Scene scene = new Scene(root);
         
@@ -46,9 +46,6 @@ public class DatabaseScheduler extends Application {
     public static void main(String[] args) {
         DatabaseScheduler.setFirstView(true);
         DBConnection.connect();  
-        Database database = new Database(); 
-        database.getAppointmentsList();
-        database.getCustomersList();
         launch(args);        
         DBConnection.disconnect();
     }

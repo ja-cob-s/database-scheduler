@@ -30,7 +30,7 @@ public class User {
     public String getUserName() {
         return this.userName;
     }
-
+    
     // Setters
     public void setUserID(int userID) {
         this.userID = userID;

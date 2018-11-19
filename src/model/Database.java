@@ -27,7 +27,7 @@ import util.DBConnection;
  */
 public class Database {
     
-    private static final String USER_NAME = "admin"; //TODO: Change this to logged in user's name
+    private static User currentUser;
     private static Connection connection;
     private static ObservableList<Appointment> myAppointments = FXCollections.observableArrayList();
     private static ObservableList<String> appointmentTypes = FXCollections.observableArrayList();
@@ -36,6 +36,14 @@ public class Database {
     private static ObservableList<City> cities = FXCollections.observableArrayList();
     
     public Database() {
+    }
+    
+    public static void setCurrentUser(User currentUser) {
+        Database.currentUser = currentUser;
+    }
+    
+     public static User getCurrentUser() {
+        return currentUser;
     }
     
     // These get lists that have already been pulled from the database
@@ -92,9 +100,9 @@ public class Database {
             ps.setTimestamp(9, startTS);
             ps.setTimestamp(10, endTS);
             ps.setTimestamp(11, createdTS);
-            ps.setString(12, USER_NAME);
+            ps.setString(12, currentUser.toString());
             ps.setTimestamp(13, createdTS);
-            ps.setString(14, USER_NAME);
+            ps.setString(14, currentUser.toString());
             ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -141,7 +149,7 @@ public class Database {
             ps.setTimestamp(7, startTS);
             ps.setTimestamp(8, endTS);
             ps.setTimestamp(9, Timestamp.from(Instant.now()));
-            ps.setString(10, USER_NAME);
+            ps.setString(10, currentUser.toString());
             ps.setInt(11, appointment.getAppointmentID());
             ps.executeUpdate();
         } catch (SQLException ex) {
@@ -180,9 +188,9 @@ public class Database {
             ps.setInt(2, customer.getAddress().getAddressID());
             ps.setInt(3, 1);
             ps.setTimestamp(4, createdTS);
-            ps.setString(5, USER_NAME);
+            ps.setString(5, currentUser.toString());
             ps.setTimestamp(6, createdTS);
-            ps.setString(7, USER_NAME);
+            ps.setString(7, currentUser.toString());
             ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -213,7 +221,7 @@ public class Database {
             ps.setString(1, customer.getCustomerName());
             ps.setInt(2, customer.getAddress().getAddressID());
             ps.setTimestamp(3, Timestamp.from(Instant.now()));
-            ps.setString(4, USER_NAME);
+            ps.setString(4, currentUser.toString());
             ps.setInt(5, customer.getCustomerID());
             ps.executeUpdate();
         } catch (SQLException ex) {
@@ -252,9 +260,9 @@ public class Database {
             ps.setString(4, address.getPostalCode());
             ps.setString(5, address.getPhoneNumber());
             ps.setTimestamp(6, createdTS);
-            ps.setString(7, USER_NAME);
+            ps.setString(7, currentUser.toString());
             ps.setTimestamp(8, createdTS);
-            ps.setString(9, USER_NAME);
+            ps.setString(9, currentUser.toString());
             ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -288,7 +296,7 @@ public class Database {
             ps.setString(4, address.getPostalCode());
             ps.setString(5, address.getPhoneNumber());
             ps.setTimestamp(6, Timestamp.from(Instant.now()));
-            ps.setString(7, USER_NAME);
+            ps.setString(7, currentUser.toString());
             ps.setInt(8, address.getAddressID());
             ps.executeUpdate();
         } catch (SQLException ex) {
@@ -535,5 +543,27 @@ public class Database {
             ex.printStackTrace();
         }        
         return cityReport;
+    }
+    
+    public User validateUser(String userName, String password) {
+        // REQUIREMENT A and I validates a user login
+        connection = DBConnection.getConnection();
+        User user = new User();
+        try {
+            PreparedStatement ps;
+            ps = connection.prepareStatement("SELECT * FROM user WHERE userName = ? AND password = ?;");
+            ps.setString(1, userName);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int userID = rs.getInt("userId");
+                user = new User(userID, userName);
+            } else {
+                return null;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return user;
     }
 }

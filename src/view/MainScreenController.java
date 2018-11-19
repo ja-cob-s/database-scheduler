@@ -13,9 +13,6 @@ import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -155,6 +152,8 @@ public class MainScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
         database = new Database();
+        database.getAppointmentsList();
+        database.getCustomersList();
         allAppointments = database.getAppointments();
         
         // Sort appointments by date before filtering
@@ -327,14 +326,15 @@ public class MainScreenController implements Initializable {
         FilteredList<Appointment> consultantReportList = new FilteredList<>(allAppointments, s -> true);
         if (database.getUsers().isEmpty()) { database.getUserList(); }
         ConsultantReportConsultantColumn.setCellValueFactory(new PropertyValueFactory<>("userName"));
-        ConsultantReportTable1.setItems(database.getUsers());
+        ConsultantReportTable1.setItems(database.getUsers().sorted());
+        
         // REQUIREMENT G - Lambda expressios for efficient filtering
         ConsultantReportTable1.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) { 
                 consultantReportList.setPredicate(s -> s.getUser().equals(ConsultantReportTable1.getSelectionModel().getSelectedItem()));
             }
         });
-        ConsultantReportTable1.getSelectionModel().select(0);
+        ConsultantReportTable1.getSelectionModel().select(Database.getCurrentUser());
         
         ConsultantReportDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         ConsultantReportStartColumn.setCellValueFactory(new PropertyValueFactory<>("start"));

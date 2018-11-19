@@ -14,6 +14,7 @@ public class AppointmentReport {
     private String type;
     private int amount;
 
+    // Constructors
     public AppointmentReport() {
     }
 
@@ -23,6 +24,7 @@ public class AppointmentReport {
         this.amount = amount;
     }
 
+    // Getters
     public String getMonth() {
         return month;
     }
@@ -35,6 +37,7 @@ public class AppointmentReport {
         return amount;
     }
 
+    // Setters
     public void setMonth(String month) {
         this.month = month;
     }

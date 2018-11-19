@@ -129,7 +129,11 @@ public class AppointmentController implements Initializable {
         /* User must pick customer from table populated w/DB data
            This fulfills 3rd bullet point of REQUIREMENT F */
         this.populateCustomersTable(database.getCustomers().sorted());
-        this.populateConsultantsTable(database.getUsers().sorted());    
+        this.populateConsultantsTable(database.getUsers().sorted());  
+        
+        if (this.getAppointment() == null) {
+            ConsultantsTable.getSelectionModel().select(Database.getCurrentUser());
+        }
     }    
     
     @FXML

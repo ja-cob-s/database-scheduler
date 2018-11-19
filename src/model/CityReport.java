@@ -13,6 +13,7 @@ public class CityReport {
     private String city;
     private int customers;
     
+    // Constructors
     public CityReport() {
     }
     
@@ -21,6 +22,7 @@ public class CityReport {
         this.customers = customers;
     }
 
+    // Getters
     public String getCity() {
         return city;
     }
@@ -29,6 +31,7 @@ public class CityReport {
         return customers;
     }
 
+    // Setters
     public void setCity(String city) {
         this.city = city;
     }
