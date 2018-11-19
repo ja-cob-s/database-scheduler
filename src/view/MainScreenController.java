@@ -18,11 +18,12 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Separator;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -104,29 +105,41 @@ public class MainScreenController implements Initializable {
     @FXML
     private Tab ReportsTab;
     @FXML
-    private SplitMenuButton ReportChooser;
+    private TableView<?> AppointmentReportTable;
     @FXML
-    private MenuItem AppointmentTypeMenuItem;
+    private TableColumn<?, ?> AppointmentReportMonthColumn;
     @FXML
-    private MenuItem ConsultantScheduleMenuItem;
+    private TableColumn<?, ?> AppointmentReportTypeColumn;
     @FXML
-    private MenuItem CustomersLocationMenuItem;
+    private TableColumn<?, ?> AppointmentReportNumberColumn;
     @FXML
-    private TableView<?> ReportsTable;
+    private TableView<?> ConsultantReportTable1;
     @FXML
-    private TableColumn<?, ?> ReportsDateColumn;
+    private TableColumn<?, ?> ConsultantReportConsultantColumn;
     @FXML
-    private TableColumn<?, ?> ReportsStartColumn;
+    private TableView<?> ConsultantReportTable2;
     @FXML
-    private TableColumn<?, ?> ReportsEndColumn;
+    private TableColumn<?, ?> ConsultantReportDateColumn;
     @FXML
-    private TableColumn<?, ?> ReportsCustomerColumn;
+    private TableColumn<?, ?> ConsultantReportStartColumn;
     @FXML
-    private TableColumn<?, ?> ReportsConsultantColumn;
+    private TableColumn<?, ?> ConsultantReportEndColumn;
     @FXML
-    private TableColumn<?, ?> ReportsDescriptionColumn;
+    private TableColumn<?, ?> ConsultantReportCustomerColumn;
     @FXML
-    private TableColumn<?, ?> ReportsLocationColumn;
+    private TableColumn<?, ?> ConsultantReportDescriptionColumn;
+    @FXML
+    private TableColumn<?, ?> ConsultantReportLocationColumn;
+    @FXML
+    private TableView<?> CustomerReportTable;
+    @FXML
+    private TableColumn<?, ?> CustomerReportCityColumn;
+    @FXML
+    private TableColumn<?, ?> CustomerReportCustomerColumn;
+    @FXML
+    private TableColumn<?, ?> CustomerReportAppointmentColumn;
+    @FXML
+    private Accordion ReportsAccordian;
     
     private ScreenHelper helper;
     private Database database;
@@ -149,17 +162,18 @@ public class MainScreenController implements Initializable {
             }
         });
         
-        filteredAppointments = new FilteredList<>(allAppointments, p -> true);
+        // REQUIREMENT G - Lambda expression for efficient sorting
+        filteredAppointments = new FilteredList<>(allAppointments, s -> true);
         
         // Ability to view the calendar by type of appointment
         if (database.getAppointmentTypes().isEmpty()) { database.getAppointmentTypesList(); }
-        AppointmentTypeChooser.setOnAction(this::AppointmentTypeChooserHandler); 
+        AppointmentTypeChooser.setOnAction(this::FilteredAppointmentsHandler); 
         AppointmentTypeChooser.getItems().addAll("Show All Types", new Separator());
         AppointmentTypeChooser.getItems().addAll(database.getAppointmentTypes());
         AppointmentTypeChooser.getSelectionModel().selectFirst();
         
-        // REQUIREMENT D ability to view the calendar by week and by month
-        AppointmentViewChooser.setOnAction(this::AppointmentViewChooserHandler);
+        // REQUIREMENT D - ability to view the calendar by week and by month
+        AppointmentViewChooser.setOnAction(this::FilteredAppointmentsHandler);
         AppointmentViewChooser.getItems().addAll("Week View", "Month View");
         AppointmentViewChooser.getSelectionModel().selectFirst();
         
@@ -198,7 +212,6 @@ public class MainScreenController implements Initializable {
                 controller.setCustomer(customer);
             }
         }
-        
     }
     
     @FXML
@@ -232,35 +245,35 @@ public class MainScreenController implements Initializable {
         } 
     }
 
-    @FXML
-    private void AppointmentTypeChooserHandler(ActionEvent event) {
-        //TODO
+    private void FilteredAppointmentsHandler(ActionEvent event) {
+        // REQUIREMENT D - ability to view the calendar by week and by month
         Object type = AppointmentTypeChooser.getSelectionModel().getSelectedItem();
-        if (type.toString().equals("Show All Types")) {
-            filteredAppointments.setPredicate(s -> true);
-        } else {
-            filteredAppointments.setPredicate(s -> s.getType().equals(type));
-        }
-    }
-
-    @FXML
-    private void AppointmentViewChooserHandler(ActionEvent event) {
         int view = AppointmentViewChooser.getSelectionModel().getSelectedIndex();
-        if (view == 0) {
-            // Week view
-            filteredAppointments.setPredicate(s -> 
-                    s.getDate().isBefore(LocalDate.now().plusDays(7)) && s.getDate().isAfter(LocalDate.now().minusDays(1)));
+        
+        // REQUIREMENT G - Lambda expression for efficient sorting
+        if (type.toString().equals("Show All Types")) {
+            if (view == 0) {
+                // Week view showing all types
+                filteredAppointments.setPredicate(s -> 
+                        s.getDate().isBefore(LocalDate.now().plusDays(7)) && s.getDate().isAfter(LocalDate.now().minusDays(1)));
+            } else {
+                // Month view showing all types
+                filteredAppointments.setPredicate(s -> 
+                        s.getDate().isBefore(LocalDate.now().plusMonths(1)) && s.getDate().isAfter(LocalDate.now().minusDays(1)));
+            }
         } else {
-            // Month view
-            filteredAppointments.setPredicate(s -> 
-                    s.getDate().isBefore(LocalDate.now().plusMonths(1)) && s.getDate().isAfter(LocalDate.now().minusDays(1)));
+            if (view == 0) {
+                // Week view only selected type
+                filteredAppointments.setPredicate(s -> s.getType().equals(type) && 
+                        s.getDate().isBefore(LocalDate.now().plusDays(7)) && s.getDate().isAfter(LocalDate.now().minusDays(1)));
+            } else {
+                // Month view only selected type
+                filteredAppointments.setPredicate(s -> s.getType().equals(type) && 
+                        s.getDate().isBefore(LocalDate.now().plusMonths(1)) && s.getDate().isAfter(LocalDate.now().minusDays(1)));
+            }
         }
     }
 
-    @FXML
-    private void ReportChooserHandler(ActionEvent event) {
-        //TODO
-    }      
     
     public void populateAppointmentsTable(ObservableList<Appointment> list) {
         AppointmentsDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));

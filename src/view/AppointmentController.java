@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -95,6 +96,7 @@ public class AppointmentController implements Initializable {
     
     private final ObservableList<LocalTime> validStartTimes = FXCollections.observableArrayList();
     private final ObservableList<LocalTime> validEndTimes = FXCollections.observableArrayList();
+    private FilteredList<LocalTime> filteredEndTimes;
     private ScreenHelper helper;
     private Database database;
     private Appointment appointment;
@@ -111,13 +113,14 @@ public class AppointmentController implements Initializable {
         if (database.getUsers().isEmpty()) { database.getUserList(); }
         
         /* User must pick start and end times within business hours from list
-           This fulfills first bullet pointof REQUIREMENT F
+           This fulfills first bullet point of REQUIREMENT F
            (Business hours assumed to be 8:00am-5:00pm) */
         this.setTimes();
+        // REQUIREMENT G - Lambda expression for efficient sorting
+        filteredEndTimes = new FilteredList<>(validEndTimes, s -> true);
+        StartChooser.setOnAction(this::StartChooserHandler);
         StartChooser.getItems().addAll(validStartTimes);
         StartChooser.getSelectionModel().select(0);
-        EndChooser.getItems().addAll(validEndTimes);    
-        EndChooser.getSelectionModel().select(3);
         
         TypeChooser.getItems().addAll(database.getAppointmentTypes());
         TypeChooser.getSelectionModel().select(0);
@@ -128,6 +131,15 @@ public class AppointmentController implements Initializable {
         this.populateCustomersTable(database.getCustomers().sorted());
         this.populateConsultantsTable(database.getUsers().sorted());    
     }    
+    
+    @FXML
+    private void StartChooserHandler(ActionEvent event) {
+        // Filters the valid end times so end time must be after chosen start time
+        filteredEndTimes.setPredicate(s -> s.isAfter(StartChooser.getValue()));
+        EndChooser.getItems().clear();
+        EndChooser.getItems().addAll(filteredEndTimes);
+        EndChooser.getSelectionModel().select(0);
+    }
 
     @FXML
     private void ExitButtonHandler(ActionEvent event) {
@@ -225,8 +237,6 @@ public class AppointmentController implements Initializable {
         
         LocalTime end = EndChooser.getSelectionModel().getSelectedItem();
         if (end == null) { helper.setValidInput(helper.IOExceptionHandler("Please select an end time.")); }
-        
-        if (!start.isBefore(end)) { helper.setValidInput(helper.IOExceptionHandler("Start time must be before end time.")); }
         
         if (!helper.getValidInput()) {
             // Show warnings and do not save

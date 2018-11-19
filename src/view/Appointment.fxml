@@ -13,87 +13,87 @@
 
 <AnchorPane id="AnchorPane" fx:id="AppointmentPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.AppointmentController">
    <children>
-      <Button fx:id="ExitButton" layoutX="720.0" layoutY="47.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#ExitButtonHandler" prefHeight="25.0" prefWidth="60.0" text="Exit" />
-      <TableView fx:id="CustomersTable" layoutX="25.0" layoutY="146.0" prefHeight="160.0" prefWidth="300.0">
+      <Button fx:id="ExitButton" layoutX="738.0" layoutY="2.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#ExitButtonHandler" prefHeight="25.0" prefWidth="60.0" text="Exit" />
+      <TableView fx:id="CustomersTable" layoutX="75.0" layoutY="146.0" prefHeight="160.0" prefWidth="300.0">
         <columns>
           <TableColumn fx:id="CustomersNameColumn" prefWidth="285.0" sortable="false" text="Name" />
         </columns>
       </TableView>
-      <TextField fx:id="CustomerSearch" layoutX="25.0" layoutY="111.0" prefWidth="240.0" promptText="Search" />
-      <Label fx:id="TitleLabel" layoutX="400.0" layoutY="119.0" text="Title">
+      <TextField fx:id="CustomerSearch" layoutX="75.0" layoutY="111.0" prefWidth="240.0" promptText="Search" />
+      <Label fx:id="TitleLabel" layoutX="438.0" layoutY="119.0" text="Title">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="DescriptionLabel" layoutX="400.0" layoutY="165.0" text="Description">
+      <Label fx:id="DescriptionLabel" layoutX="438.0" layoutY="165.0" text="Description">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="TypeLabel" layoutX="401.0" layoutY="315.0" text="Type">
+      <Label fx:id="TypeLabel" layoutX="438.0" layoutY="315.0" text="Type">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="StartLabel" layoutX="401.0" layoutY="408.0" text="Start">
+      <Label fx:id="StartLabel" layoutX="438.0" layoutY="408.0" text="Start">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="EndLabel" layoutX="401.0" layoutY="456.0" text="End">
+      <Label fx:id="EndLabel" layoutX="438.0" layoutY="456.0" text="End">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="DateLabel" layoutX="401.0" layoutY="361.0" text="Date">
+      <Label fx:id="DateLabel" layoutX="438.0" layoutY="361.0" text="Date">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="CancelButton" layoutX="617.0" layoutY="516.0" mnemonicParsing="false" onAction="#CancelButtonHandler" prefHeight="30.0" prefWidth="70.0" text="Cancel">
+      <Button fx:id="CancelButton" layoutX="655.0" layoutY="516.0" mnemonicParsing="false" onAction="#CancelButtonHandler" prefHeight="30.0" prefWidth="70.0" text="Cancel">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <Label fx:id="CustomerLabel" layoutX="25.0" layoutY="86.0" text="Customer">
+      <Label fx:id="CustomerLabel" layoutX="75.0" layoutY="86.0" text="Customer">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="CustomerSearchButton" layoutX="273.0" layoutY="111.0" mnemonicParsing="false" onAction="#CustomerSearchButtonHandler" text="Search" />
-      <TextField fx:id="TitleField" layoutX="487.0" layoutY="117.0" prefWidth="200.0" />
-      <TextArea fx:id="DescriptionField" layoutX="487.0" layoutY="166.0" prefHeight="75.0" prefWidth="200.0" />
-      <ChoiceBox fx:id="TypeChooser" layoutX="488.0" layoutY="312.0" prefWidth="200.0" />
-      <DatePicker fx:id="DateChooser" layoutX="488.0" layoutY="358.0" prefWidth="200.0" />
-      <Label fx:id="AppointmentLabel" layoutX="28.0" layoutY="47.0" text="Appointment">
+      <Button fx:id="CustomerSearchButton" layoutX="323.0" layoutY="111.0" mnemonicParsing="false" onAction="#CustomerSearchButtonHandler" text="Search" />
+      <TextField fx:id="TitleField" layoutX="525.0" layoutY="117.0" prefWidth="200.0" />
+      <TextArea fx:id="DescriptionField" layoutX="525.0" layoutY="166.0" prefHeight="75.0" prefWidth="200.0" />
+      <ChoiceBox fx:id="TypeChooser" layoutX="525.0" layoutY="312.0" prefWidth="200.0" />
+      <DatePicker fx:id="DateChooser" layoutX="525.0" layoutY="358.0" prefWidth="200.0" />
+      <Label fx:id="AppointmentLabel" layoutX="75.0" layoutY="47.0" text="Appointment">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="SaveButton" layoutX="544.0" layoutY="516.0" mnemonicParsing="false" onAction="#SaveButtonHandler" prefHeight="30.0" prefWidth="50.0" text="Save">
+      <Button fx:id="SaveButton" layoutX="582.0" layoutY="516.0" mnemonicParsing="false" onAction="#SaveButtonHandler" prefHeight="30.0" prefWidth="50.0" text="Save">
          <font>
             <Font size="14.0" />
          </font>
       </Button>
-      <ChoiceBox fx:id="StartChooser" layoutX="488.0" layoutY="405.0" prefWidth="200.0" />
-      <ChoiceBox fx:id="EndChooser" layoutX="488.0" layoutY="454.0" prefWidth="200.0" />
-      <TableView fx:id="ConsultantsTable" layoutX="25.0" layoutY="386.0" prefHeight="160.0" prefWidth="300.0">
+      <ChoiceBox fx:id="StartChooser" layoutX="525.0" layoutY="405.0" prefWidth="200.0" />
+      <ChoiceBox fx:id="EndChooser" layoutX="525.0" layoutY="454.0" prefWidth="200.0" />
+      <TableView fx:id="ConsultantsTable" layoutX="75.0" layoutY="386.0" prefHeight="160.0" prefWidth="300.0">
         <columns>
           <TableColumn fx:id="ConsultantsNameColumn" prefWidth="285.0" sortable="false" text="Name" />
         </columns>
       </TableView>
-      <Label layoutX="25.0" layoutY="325.0" text="Consultant">
+      <Label layoutX="75.0" layoutY="325.0" text="Consultant">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="ConsultantSearch" layoutX="25.0" layoutY="350.0" prefWidth="240.0" promptText="Search" />
-      <Button fx:id="ConsultantSearchButton" layoutX="273.0" layoutY="350.0" mnemonicParsing="false" onAction="#ConsultantSearchButtonHandler" text="Search" />
-      <Label fx:id="LocationLabel" layoutX="401.0" layoutY="267.0" text="Location">
+      <TextField fx:id="ConsultantSearch" layoutX="75.0" layoutY="350.0" prefWidth="240.0" promptText="Search" />
+      <Button fx:id="ConsultantSearchButton" layoutX="323.0" layoutY="350.0" mnemonicParsing="false" onAction="#ConsultantSearchButtonHandler" text="Search" />
+      <Label fx:id="LocationLabel" layoutX="438.0" layoutY="267.0" text="Location">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="LocationField" layoutX="488.0" layoutY="265.0" prefWidth="200.0" />
+      <TextField fx:id="LocationField" layoutX="525.0" layoutY="265.0" prefWidth="200.0" />
    </children>
 </AnchorPane>
