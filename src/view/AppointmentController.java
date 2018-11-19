@@ -19,13 +19,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Appointment;
 import model.Customer;
@@ -40,10 +38,6 @@ import model.User;
 public class AppointmentController implements Initializable {
 
     @FXML
-    private AnchorPane AppointmentPane;
-    @FXML
-    private Button ExitButton;
-    @FXML
     private TableView<Customer> CustomersTable;
     @FXML
     private TableColumn<Customer, String> CustomersNameColumn;
@@ -56,25 +50,7 @@ public class AppointmentController implements Initializable {
     @FXML
     private TextField ConsultantSearch;
     @FXML
-    private Label TitleLabel;
-    @FXML
-    private Label DescriptionLabel;
-    @FXML
-    private Label TypeLabel;
-    @FXML
-    private Label StartLabel;
-    @FXML
-    private Label EndLabel;
-    @FXML
-    private Label DateLabel;
-    @FXML
     private Button CancelButton;
-    @FXML
-    private Label CustomerLabel;
-    @FXML
-    private Button CustomerSearchButton;
-    @FXML
-    private Button ConsultantSearchButton;
     @FXML
     private TextField TitleField;
     @FXML
@@ -90,8 +66,6 @@ public class AppointmentController implements Initializable {
     @FXML
     private ChoiceBox<LocalTime> EndChooser;
     @FXML
-    private Label AppointmentLabel;
-    @FXML
     private Button SaveButton;
     
     private final ObservableList<LocalTime> validStartTimes = FXCollections.observableArrayList();
@@ -103,12 +77,15 @@ public class AppointmentController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
         database = new Database();
         
+        if (database.getCustomers().isEmpty()) { database.getCustomersList(); }
         if (database.getAppointmentTypes().isEmpty()) { database.getAppointmentTypesList(); }
         if (database.getUsers().isEmpty()) { database.getUserList(); }
         
@@ -174,7 +151,7 @@ public class AppointmentController implements Initializable {
 
             // Displays full list if no search string
             if (searchItem == null || searchItem.isEmpty()) {
-                this.populateCustomersTable(database.getCustomers());
+                this.populateCustomersTable(database.getCustomers().sorted());
                 found = true;
             }
             // Searches by Name
@@ -198,7 +175,7 @@ public class AppointmentController implements Initializable {
 
             // Displays full list if no search string
             if (searchItem == null || searchItem.isEmpty()) {
-                this.populateConsultantsTable(database.getUsers());
+                this.populateConsultantsTable(database.getUsers().sorted());
                 found = true;
             }
             // Searches by Name

@@ -67,6 +67,8 @@ public class LoginController implements Initializable {
     /**
      * Initializes the controller class for login screen
      * Bilingual in English and German fulfills REQUIREMENT A
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

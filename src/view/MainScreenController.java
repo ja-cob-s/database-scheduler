@@ -11,14 +11,13 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Separator;
@@ -27,7 +26,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Address;
 import model.Appointment;
@@ -47,19 +45,11 @@ import model.User;
 public class MainScreenController implements Initializable {
 
     @FXML
-    private AnchorPane AppointmentViewPane;
-    @FXML
-    private Button ExitButton;
-    @FXML
     private Button NewAppointmentButton;
-    @FXML
-    private Button DeleteAppointmentButton;
     @FXML
     private Button EditAppointmentButton;
     @FXML
     private Button NewCustomerButton;
-    @FXML
-    private Button DeleteCustomerButton;
     @FXML
     private Button EditCustomerButton;
     @FXML
@@ -103,8 +93,6 @@ public class MainScreenController implements Initializable {
     @FXML
     private TableColumn<Customer, String> CustomersPhoneColumn;
     @FXML
-    private Tab ReportsTab;
-    @FXML
     private TableView<AppointmentReport> AppointmentReportTable;
     @FXML
     private TableColumn<AppointmentReport, String> AppointmentReportMonthColumn;
@@ -136,8 +124,6 @@ public class MainScreenController implements Initializable {
     private TableColumn<CityReport, String> CustomerReportCityColumn;
     @FXML
     private TableColumn<CityReport, Integer> CustomerReportCustomerColumn;
-    @FXML
-    private Accordion ReportsAccordian;
     
     private ScreenHelper helper;
     private Database database;
@@ -147,23 +133,19 @@ public class MainScreenController implements Initializable {
     /**
      * Initializes the controller class that controls the main screen which
      * displays appointment list, customer list, and reports
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
         database = new Database();
         if (database.getAppointments().isEmpty()) { database.getAppointmentsList(); }
-        if (database.getCustomers().isEmpty()) { database.getCustomersList(); }
         allAppointments = database.getAppointments();
         
-        // Sort appointments by date before filtering
-        Collections.sort(allAppointments, new Comparator<Appointment>() {
-            public int compare(Appointment a1, Appointment a2) {
-                return a1.getDate().compareTo(a2.getDate());
-            }
-        });
-        
-        // REQUIREMENT G - Lambda expression for efficient sorting
+        // REQUIREMENT G - Lambda expressions for efficient sorting and filtering
+        Collections.sort(allAppointments, (Appointment a1, Appointment a2) -> 
+                a1.getDate().compareTo(a2.getDate()));
         filteredAppointments = new FilteredList<>(allAppointments, s -> true);
         
         // Ability to view the calendar by type of appointment
@@ -179,8 +161,27 @@ public class MainScreenController implements Initializable {
         AppointmentViewChooser.getSelectionModel().selectFirst();
         
         this.populateAppointmentsTable(this.getFilteredAppointments());
-        this.populateCustomersTable(database.getCustomers().sorted());
-        this.populateReportsTables();
+        
+        // REQUIREMENT G - Lambda expression to add listener on Tab Pane
+        TabPane.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? 
+                extends Number> observable, Number oldValue, Number newValue) -> {
+            switch (TabPane.getSelectionModel().getSelectedIndex()) {
+                case 0:
+                    // Appointments tab
+                    break;
+                case 1:
+                    // Customer tab
+                    if (database.getCustomers().isEmpty()) { database.getCustomersList(); }
+                    this.populateCustomersTable(database.getCustomers().sorted());
+                    break;
+                case 2:
+                    // Reports tab
+                    this.populateReportsTables();
+                    break;
+                default:
+                    break;
+            }
+        });
         
         // REQUIREMENT H - provide an alert if there is an appointment within 15 minutes of user login
         if (DatabaseScheduler.isFirstView()) {

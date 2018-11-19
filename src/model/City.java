@@ -67,10 +67,7 @@ public class City {
             return false;
         }
         final City other = (City) obj;
-        if (this.cityID != other.cityID) {
-            return false;
-        }
-        return true;
+        return this.cityID == other.cityID;
     }
     
     @Override

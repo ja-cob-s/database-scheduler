@@ -51,13 +51,7 @@ public class ScreenHelper {
         alert.setContentText(s);
 
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            // ... user chose OK
-            return true;
-        } else {
-            // ... user chose CANCEL or closed the dialog
-            return false;
-        }
+        return result.get() == ButtonType.OK;
     }
     
     public void showAlertDialog(String s) {
@@ -118,7 +112,7 @@ public class ScreenHelper {
     public int getInt(String s, String IOExceptionText) {
         int i = 0;
         try { i = Integer.parseInt(s); }
-        catch(Exception e) { this.setValidInput(IOExceptionHandler("Invalid input in: " + IOExceptionText)); }
+        catch(NumberFormatException e) { this.setValidInput(IOExceptionHandler("Invalid input in: " + IOExceptionText)); }
         return i;
     }
     

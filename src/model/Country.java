@@ -57,10 +57,7 @@ public class Country {
             return false;
         }
         final Country other = (Country) obj;
-        if (this.countryID != other.countryID) {
-            return false;
-        }
-        return true;
+        return this.countryID == other.countryID;
     }
     
     @Override

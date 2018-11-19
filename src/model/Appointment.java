@@ -136,10 +136,7 @@ public class Appointment {
             return false;
         }
         final Appointment other = (Appointment) obj;
-        if (this.appointmentID != other.appointmentID) {
-            return false;
-        }
-        return true;
+        return this.appointmentID == other.appointmentID;
     }
     
     @Override

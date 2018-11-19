@@ -57,10 +57,7 @@ public class User {
             return false;
         }
         final User other = (User) obj;
-        if (this.userID != other.userID) {
-            return false;
-        }
-        return true;
+        return this.userID == other.userID;
     }
     
     @Override

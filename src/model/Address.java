@@ -97,10 +97,7 @@ public class Address {
             return false;
         }
         final Address other = (Address) obj;
-        if (this.addressID != other.addressID) {
-            return false;
-        }
-        return true;
+        return this.addressID == other.addressID;
     }
     
     @Override

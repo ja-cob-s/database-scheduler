@@ -20,7 +20,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.Address;
 import model.City;
@@ -35,25 +34,9 @@ import model.Database;
 public class CustomerController implements Initializable {
 
     @FXML
-    private AnchorPane CustomerPane;
-    @FXML
-    private Button ExitButton;
-    @FXML
     private TableView<Customer> CustomersTable;
     @FXML
     private TableColumn<Customer, String> CustomersNameColumn;
-    @FXML
-    private Label NameLabel;
-    @FXML
-    private Label AddressLabel;
-    @FXML
-    private Label CityLabel;
-    @FXML
-    private Label PostalCodeLabel;
-    @FXML
-    private Label PhoneLabel;
-    @FXML
-    private Label CountryLabel;
     @FXML
     private Button CancelButton;
     @FXML
@@ -157,8 +140,13 @@ public class CustomerController implements Initializable {
                 
         String postalCode = helper.getString(PostalCodeField.getText(), "Postal Code");
         
-        // TODO: Make sure phone number is 20 chars or less and in the format 123-456-7890
-        String phoneNumber = helper.getString(PhoneNumberField.getText(), "Phone Number");
+        /* Validates that phone number is in one of the following formats:
+           1234567890, 123-456-7890, (123)456-7890, (123)456789*/
+        String phoneNumber = PhoneNumberField.getText();
+        if (!phoneNumber.matches("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}")) {
+            helper.setValidInput(false);
+            helper.setExceptionString("Please enter a valid phone number.");
+        }
         
         if (!helper.isValidInput()) {
             // Show warnings and do not save

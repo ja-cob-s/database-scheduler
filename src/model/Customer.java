@@ -83,10 +83,7 @@ public class Customer {
             return false;
         }
         final Customer other = (Customer) obj;
-        if (this.customerID != other.customerID) {
-            return false;
-        }
-        return true;
+        return this.customerID == other.customerID;
     }
 
     @Override

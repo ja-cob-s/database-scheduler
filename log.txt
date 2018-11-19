@@ -6,3 +6,13 @@ Nov 19, 2018 3:49:53 PM view.LoginController LoginButtonHandler
 WARNING: Invalid login attempt
 Nov 19, 2018 3:50:01 PM view.LoginController LoginButtonHandler
 INFO: Successful login as test
+Nov 19, 2018 3:58:14 PM view.LoginController LoginButtonHandler
+INFO: Successful login as test
+Nov 19, 2018 4:02:35 PM view.LoginController LoginButtonHandler
+INFO: Successful login as test
+Nov 19, 2018 4:03:45 PM view.LoginController LoginButtonHandler
+INFO: Successful login as test
+Nov 19, 2018 4:09:14 PM view.LoginController LoginButtonHandler
+INFO: Successful login as test
+Nov 19, 2018 4:21:58 PM view.LoginController LoginButtonHandler
+INFO: Successful login as test

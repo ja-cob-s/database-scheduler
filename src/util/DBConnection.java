@@ -40,9 +40,7 @@ import java.sql.SQLException;
             Class.forName(DRIVER);
             connection = DriverManager.getConnection(PATH, USERNAME, PASSWORD);
             System.out.print("Connected.\n");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
