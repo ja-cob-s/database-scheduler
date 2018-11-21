@@ -22,13 +22,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Address;
+import model.Appointment;
 import model.City;
 import model.Customer;
 import model.Database;
 
 /**
  * FXML Controller class controls the Customer screen which allows the user to
- * add or update customer records
+ * add, update, or delete customer records - part of REQUIREMENT B
  * @author jnsch
  */
 public class CustomerController implements Initializable {
@@ -55,6 +56,8 @@ public class CustomerController implements Initializable {
     private TextField PostalCodeField;
     @FXML
     private TextField PhoneNumberField;
+    @FXML
+    private Button DeleteButton;
     
     private ScreenHelper helper;
     private Database database;
@@ -63,12 +66,16 @@ public class CustomerController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         helper = new ScreenHelper();
         database = new Database();
+        DeleteButton.setVisible(false);
         
+        if (database.getCustomers().isEmpty()) { database.getCustomersList(); }
         if (database.getCities().isEmpty()) { database.getCitiesList(); }
         cities = database.getCities();
         
@@ -93,7 +100,6 @@ public class CustomerController implements Initializable {
         });
     }
     
-    @FXML
     private void CityChooserHandler(ActionEvent event) {
         // Fills in the appropriate country for the city chosen.
         CountryField.setText(CityChooser.getSelectionModel().getSelectedItem().getCountry().toString());
@@ -122,6 +128,8 @@ public class CustomerController implements Initializable {
 
     @FXML
     private void SaveButtonHandler(ActionEvent event) throws IOException {
+        // REQUIREMENT B - Saves a new customer or updates an existing customer
+        
         // These checks make sure all user input is valid before saving
         helper.setValidInput(true);
         String customerName = helper.getString(NameField.getText(), "Name field");
@@ -184,6 +192,31 @@ public class CustomerController implements Initializable {
         helper.setExceptionString(""); // Clear out exception string for next run
     }
     
+    @FXML
+    private void DeleteButtonHandler(ActionEvent event) throws IOException {
+        // REQUIREMENT B - Deletes the current customer and returns to the Main Screen
+        
+        if (helper.showConfirmationDialog("Are you sure you want to delete this customer?")){
+            // User chose OK
+            
+            // Does not allow user to delete a customer has has active appointments
+            boolean hasAppointments = false;
+            for (Appointment a : database.getAppointments()) {
+                if (a.getCustomer().equals(this.getCustomer())) {
+                    hasAppointments = true;
+                    break;
+                } 
+            }
+            if (hasAppointments) {
+                helper.showAlertDialog("This customer has active appointments. Please delete the appointments first and try again.");
+            } else {
+                database.deleteCustomer(this.getCustomer());
+            Stage stage = (Stage) SaveButton.getScene().getWindow();
+            helper.nextScreenHandler(stage, "MainScreen.fxml");
+            }
+        }
+    }
+    
     public Customer getCustomer() {
         return this.customer;
     }
@@ -199,6 +232,7 @@ public class CustomerController implements Initializable {
         PhoneNumberField.setText(customer.getAddress().getPhoneNumber());
         
         CustomersTable.getSelectionModel().select(customer);
+        DeleteButton.setVisible(true);
     }
     
     public void populateCustomersTable(ObservableList<Customer> list) {

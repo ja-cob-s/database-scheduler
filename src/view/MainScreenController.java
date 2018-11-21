@@ -5,7 +5,6 @@
  */
 package view;
 
-import database.scheduler.DatabaseScheduler;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -38,8 +37,9 @@ import model.Database;
 import model.User;
 
 /**
- * FXML Controller class
- *
+ * FXML Controller class that controls the main screen which shows
+ * appointments list, customers list, and reports
+ * Part of REQUIREMENTS B, C, D, and I
  * @author jnsch
  */
 public class MainScreenController implements Initializable {
@@ -52,6 +52,8 @@ public class MainScreenController implements Initializable {
     private Button NewCustomerButton;
     @FXML
     private Button EditCustomerButton;
+    @FXML
+    private Button CustomerButton;
     @FXML
     private TabPane TabPane;
     @FXML
@@ -72,6 +74,8 @@ public class MainScreenController implements Initializable {
     private TableColumn<Appointment, User> AppointmentsConsultantColumn;
     @FXML
     private TableColumn<Appointment, String> AppointmentsDescriptionColumn;
+    @FXML
+    private TableColumn<Appointment, String> AppointmentsTypeColumn;
     @FXML
     private TableColumn<Appointment, String> AppointmentsLocationColumn;
     @FXML
@@ -131,8 +135,7 @@ public class MainScreenController implements Initializable {
     private FilteredList<Appointment> filteredAppointments;
 
     /**
-     * Initializes the controller class that controls the main screen which
-     * displays appointment list, customer list, and reports
+     * Initializes the controller class
      * @param url
      * @param rb
      */
@@ -182,24 +185,16 @@ public class MainScreenController implements Initializable {
                     break;
             }
         });
-        
-        // REQUIREMENT H - provide an alert if there is an appointment within 15 minutes of user login
-        if (DatabaseScheduler.isFirstView()) {
-            if (filteredAppointments.get(0).getDate().equals(LocalDate.now()) &&
-                    filteredAppointments.get(0).getStart().isAfter(LocalTime.now().minusMinutes(1)) &&
-                    filteredAppointments.get(0).getStart().isBefore(LocalTime.now().plusMinutes(15))) {
-                helper.showAlertDialog("Reminder: You have appointment(s) within the next 15 minutes.");
-            }
-            DatabaseScheduler.setFirstView(false);
-        }
     }    
     
     @FXML
     private void NewButtonHandler(ActionEvent event) throws IOException {
         if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
+            // Takes the user to the screen to add a new appointment
             Stage stage = (Stage) NewAppointmentButton.getScene().getWindow();
             helper.nextScreenHandler(stage, "Appointment.fxml");
         } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
+            // Takes the user to the screen to add a new customer
             Stage stage = (Stage) NewCustomerButton.getScene().getWindow();
             helper.nextScreenHandler(stage, "Customer.fxml");
         }
@@ -209,6 +204,7 @@ public class MainScreenController implements Initializable {
     private void EditButtonHandler(ActionEvent event) throws IOException {
         
         if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
+            // Takes the user to the screen to edit an appointment record
             if (AppointmentsTable.getSelectionModel().getSelectedItem() != null) {
                 Stage stage = (Stage) EditAppointmentButton.getScene().getWindow();
                 AppointmentController controller = (AppointmentController) 
@@ -217,6 +213,7 @@ public class MainScreenController implements Initializable {
                 controller.setAppointment(appointment);
             }
         } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
+            // Takes the user to the screen to edit a customer record
             if (CustomersTable.getSelectionModel().getSelectedItem() != null) {
                 Stage stage = (Stage) EditCustomerButton.getScene().getWindow();
                 CustomerController controller = (CustomerController) 
@@ -230,6 +227,7 @@ public class MainScreenController implements Initializable {
     @FXML
     private void DeleteButtonHandler(ActionEvent event) {
         if (TabPane.getSelectionModel().getSelectedItem() == AppointmentsTab) {
+            // Deletes the selected appointment. Shows a confirmation dialog first
             if (AppointmentsTable.getSelectionModel().getSelectedItem() != null) {
                 if (helper.showConfirmationDialog("Are you sure you want to delete this appointment?")){
                     // User chose OK
@@ -238,15 +236,41 @@ public class MainScreenController implements Initializable {
                 }
             }
         } else if (TabPane.getSelectionModel().getSelectedItem() == CustomersTab) {
+            // Deletes the selected customer. Shows a confirmation dialog first
             if (CustomersTable.getSelectionModel().getSelectedItem() != null) {
                 if (helper.showConfirmationDialog("Are you sure you want to delete this customer?")){
                     // User chose OK
                     Customer customer = CustomersTable.getSelectionModel().getSelectedItem();
-                    database.deleteCustomer(customer);
+                    
+                    // Does not allow user to delete a customer has has active appointments
+                    boolean hasAppointments = false;
+                    for (Appointment a : database.getAppointments()) {
+                        if (a.getCustomer().equals(customer)) {
+                            hasAppointments = true;
+                            break;
+                        } 
+                    }
+                    if (hasAppointments) {
+                        helper.showAlertDialog("This customer has active appointments. Please delete the appointments first and try again.");
+                    } else {
+                        database.deleteCustomer(customer);
+                    }
                 }
             }
         }
     }  
+    
+    @FXML
+    private void CustomerButtonHandler(ActionEvent event) throws IOException {
+        // Switches to customer record screen for the selected customer
+        if (AppointmentsTable.getSelectionModel().getSelectedItem() != null) {
+                Stage stage = (Stage) CustomerButton.getScene().getWindow();
+                CustomerController controller = (CustomerController) 
+                        helper.nextScreenControllerHandler(stage, "Customer.fxml");
+                Customer customer = AppointmentsTable.getSelectionModel().getSelectedItem().getCustomer();
+                controller.setCustomer(customer);
+            }
+    }
     
     @FXML
     private void ExitButtonHandler(ActionEvent event) {
@@ -295,6 +319,7 @@ public class MainScreenController implements Initializable {
         AppointmentsCustomerColumn.setCellValueFactory(new PropertyValueFactory<>("customer"));
         AppointmentsConsultantColumn.setCellValueFactory(new PropertyValueFactory<>("user"));
         AppointmentsDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        AppointmentsTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         AppointmentsLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
 
         AppointmentsTable.setItems(list);

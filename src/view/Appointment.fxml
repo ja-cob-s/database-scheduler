@@ -77,23 +77,29 @@
       </Button>
       <ChoiceBox fx:id="StartChooser" layoutX="525.0" layoutY="405.0" prefWidth="200.0" />
       <ChoiceBox fx:id="EndChooser" layoutX="525.0" layoutY="454.0" prefWidth="200.0" />
-      <TableView fx:id="ConsultantsTable" layoutX="75.0" layoutY="386.0" prefHeight="160.0" prefWidth="300.0">
+      <TableView fx:id="ConsultantsTable" layoutX="75.0" layoutY="405.0" prefHeight="140.0" prefWidth="300.0">
         <columns>
           <TableColumn fx:id="ConsultantsNameColumn" prefWidth="285.0" sortable="false" text="Name" />
         </columns>
       </TableView>
-      <Label layoutX="75.0" layoutY="325.0" text="Consultant">
+      <Label layoutX="75.0" layoutY="345.0" text="Consultant">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="ConsultantSearch" layoutX="75.0" layoutY="350.0" prefWidth="240.0" promptText="Search" />
-      <Button fx:id="ConsultantSearchButton" layoutX="323.0" layoutY="350.0" mnemonicParsing="false" onAction="#ConsultantSearchButtonHandler" text="Search" />
+      <TextField fx:id="ConsultantSearch" layoutX="75.0" layoutY="370.0" prefWidth="240.0" promptText="Search" />
+      <Button fx:id="ConsultantSearchButton" layoutX="323.0" layoutY="370.0" mnemonicParsing="false" onAction="#ConsultantSearchButtonHandler" text="Search" />
       <Label fx:id="LocationLabel" layoutX="438.0" layoutY="267.0" text="Location">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
       <TextField fx:id="LocationField" layoutX="525.0" layoutY="265.0" prefWidth="200.0" />
+      <Button fx:id="DeleteButton" layoutX="493.0" layoutY="516.0" mnemonicParsing="false" onAction="#DeleteButtonHandler" prefHeight="30.0" prefWidth="65.0" text="Delete">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="CustomerButton" layoutX="238.0" layoutY="316.0" mnemonicParsing="false" onAction="#CustomerButtonHandler" text="View Customer Record" />
    </children>
 </AnchorPane>

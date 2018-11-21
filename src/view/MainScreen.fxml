@@ -18,22 +18,24 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <ChoiceBox fx:id="AppointmentTypeChooser" layoutX="260.0" layoutY="17.0" maxHeight="25.0" maxWidth="115.0" minHeight="25.0" minWidth="115.0" prefHeight="25.0" prefWidth="115.0" />
+                        <ChoiceBox fx:id="AppointmentTypeChooser" layoutX="426.0" layoutY="17.0" maxHeight="25.0" maxWidth="115.0" minHeight="25.0" minWidth="115.0" prefHeight="25.0" prefWidth="115.0" />
                         <TableView fx:id="AppointmentsTable" layoutY="54.0" prefHeight="517.0" prefWidth="800.0">
                           <columns>
                               <TableColumn fx:id="AppointmentsDateColumn" text="Date" />
                             <TableColumn fx:id="AppointmentsStartColumn" minWidth="0.0" prefWidth="72.0" text="Start Time" />
                               <TableColumn fx:id="AppointmentsEndColumn" prefWidth="72.0" text="End Time" />
-                              <TableColumn fx:id="AppointmentsCustomerColumn" prefWidth="120.0" text="Customer" />
-                              <TableColumn fx:id="AppointmentsConsultantColumn" prefWidth="120.0" text="Consultant" />
-                              <TableColumn fx:id="AppointmentsDescriptionColumn" prefWidth="185.0" text="Description" />
+                              <TableColumn fx:id="AppointmentsCustomerColumn" prefWidth="103.0" text="Customer" />
+                              <TableColumn fx:id="AppointmentsConsultantColumn" prefWidth="102.0" text="Consultant" />
+                              <TableColumn fx:id="AppointmentsDescriptionColumn" prefWidth="145.0" text="Description" />
+                              <TableColumn fx:id="AppointmentsTypeColumn" prefWidth="75.0" text="Type" />
                               <TableColumn fx:id="AppointmentsLocationColumn" prefWidth="137.0" text="Location" />
                           </columns>
                         </TableView>
-                        <ChoiceBox fx:id="AppointmentViewChooser" layoutX="395.0" layoutY="17.0" maxHeight="25.0" maxWidth="115.0" minHeight="25.0" minWidth="115.0" prefHeight="25.0" prefWidth="115.0" />
+                        <ChoiceBox fx:id="AppointmentViewChooser" layoutX="561.0" layoutY="17.0" maxHeight="25.0" maxWidth="115.0" minHeight="25.0" minWidth="115.0" prefHeight="25.0" prefWidth="115.0" />
                         <Button fx:id="DeleteAppointmentButton" layoutX="180.0" layoutY="17.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#DeleteButtonHandler" prefHeight="25.0" prefWidth="60.0" text="Delete" />
                         <Button fx:id="EditAppointmentButton" layoutX="100.0" layoutY="17.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#EditButtonHandler" prefHeight="25.0" prefWidth="60.0" text="Edit" />
                         <Button fx:id="NewAppointmentButton" defaultButton="true" layoutX="20.0" layoutY="17.0" maxHeight="25.0" maxWidth="60.0" minHeight="25.0" minWidth="60.0" mnemonicParsing="false" onAction="#NewButtonHandler" prefHeight="25.0" prefWidth="60.0" text="New" />
+                        <Button fx:id="CustomerButton" layoutX="260.0" layoutY="17.0" maxHeight="25.0" minHeight="25.0" mnemonicParsing="false" onAction="#CustomerButtonHandler" prefHeight="25.0" prefWidth="145.0" text="View Customer Record" />
                      </children></AnchorPane>
             </content>
           </Tab>

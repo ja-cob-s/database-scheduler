@@ -22,6 +22,7 @@ import util.DBConnection;
 
 /**
  * Class to handle all interactions with the SQL database
+ * Handles the SQL parts of REQUIREMENTS A, B, C, E, F, and I
  * with the exception of connecting/disconnecting
  * @author jnsch
  */
@@ -70,7 +71,9 @@ public class Database {
     /* These next three methods satisfy REQUIREMENT C for 
        adding, updating, and deleting appointment records*/
     public void addAppointment(Appointment appointment) {
-        // Convert start and end back to datetime format in UTC
+        // REQUIREMENT C - Adds a new appointment
+        
+        // Convert start and end back to datetime format in UTC - REQUIREMENT E
         ZonedDateTime startZDT = LocalDateTime.of(appointment.getDate(), 
                 appointment.getStart()).atZone(ZoneId.systemDefault());
         Timestamp startTS = Timestamp.from(startZDT.toInstant());
@@ -124,7 +127,9 @@ public class Database {
     }
     
     public void updateAppointment(Appointment appointment) {
-        // Convert start and end back to datetime format in UTC
+        // REQUIREMENT C - Updates an existing appointment
+        
+        // Convert start and end back to datetime format in UTC - REQUIREMENT E
         ZonedDateTime startZDT = LocalDateTime.of(appointment.getDate(), 
                 appointment.getStart()).atZone(ZoneId.systemDefault());
         Timestamp startTS = Timestamp.from(startZDT.toInstant());
@@ -158,6 +163,7 @@ public class Database {
     }
     
     public void deleteAppointment(Appointment appointment) {
+        // REQUIREMENT C - Deletes an appointment
         try {
             PreparedStatement ps;
             ps = connection.prepareStatement("DELETE FROM appointment WHERE appointmentId = ?;");
@@ -173,6 +179,8 @@ public class Database {
     /* These next five methods satisfy REQUIREMENT B for 
        adding, updating, and deleting customer records*/
     public void addCustomer(Customer customer) {
+        // REQUIREMENT B - Adds a new customer
+        
         /* Allows the database to auto increment to set the customerID, 
            then queries and finds the record from createdTS to set
            the customerID of the appointment object */
@@ -212,6 +220,8 @@ public class Database {
     }
     
     public void updateCustomer(Customer customer) {
+        // REQUIREMENT B - Updates an existing customer
+        
         String sql = "UPDATE customer"
                    + " SET customerName = ?, addressId = ?, lastUpdate = ?, lastUpdateBy = ?"
                    + " WHERE customerId = ?;";
@@ -230,6 +240,8 @@ public class Database {
     }
     
     public void deleteCustomer(Customer customer) {
+        // REQUIREMENT B - Deletes a customer
+        
         try {
             PreparedStatement ps;
             ps = connection.prepareStatement("DELETE FROM customer WHERE customerId = ?;");
@@ -243,6 +255,8 @@ public class Database {
     }
     
     public void addAddress(Address address) {
+        // Adds a new address
+        
         /* Allows the database to auto increment to set the addressID, 
            then queries and finds the record from createdTS to set
            the addressID of the appointment object */
@@ -283,6 +297,8 @@ public class Database {
     }
     
     public void updateAddress(Address address) {
+        // Updates an existing address
+        
         String sql = "UPDATE address"
                    + " SET address = ?, address2 = ?, cityId = ?, postalCode = ?,"
                    + " phone = ?, lastUpdate = ?, lastUpdateBy = ?"
@@ -321,9 +337,9 @@ public class Database {
                 String description = rs.getString("description");
                 String location = rs.getString("location");
                 String type = rs.getString("type");
-                LocalDate date = rs.getTimestamp("start").toLocalDateTime().toLocalDate();
-                LocalTime start = rs.getTimestamp("start").toLocalDateTime().toLocalTime();
-                LocalTime end = rs.getTimestamp("end").toLocalDateTime().toLocalTime();
+                LocalDate date = rs.getTimestamp("start").toLocalDateTime().toLocalDate(); // REQUIREMENT E
+                LocalTime start = rs.getTimestamp("start").toLocalDateTime().toLocalTime(); // REQUIREMENT E
+                LocalTime end = rs.getTimestamp("end").toLocalDateTime().toLocalTime(); // REQUIREMENT E
                 myAppointments.add(new Appointment(appointmentID, customer, user, title, 
                         description, location, type, date, start, end));
             }
@@ -334,6 +350,8 @@ public class Database {
     }
     
     public ObservableList<String> getAppointmentTypesList() {
+        // Gets the valid types of appointments
+        
         connection = DBConnection.getConnection();
         
         try {
@@ -350,6 +368,8 @@ public class Database {
     }
     
     public ObservableList<City> getCitiesList() {
+        // Gets the valid cities
+        
         connection = DBConnection.getConnection();
         
         try {
@@ -368,6 +388,8 @@ public class Database {
     }
     
     public ObservableList<Customer> getCustomersList() {
+        // Gets the existing customers
+        
         connection = DBConnection.getConnection();
         
         try {
@@ -386,6 +408,8 @@ public class Database {
     }
     
     public ObservableList<User> getUserList() {
+        // Gets the valid users
+        
         connection = DBConnection.getConnection();
         
         try {
@@ -403,6 +427,8 @@ public class Database {
     }
     
     public Customer getCustomer(int customerID) {
+        // Gets a single customer's record
+        
         connection = DBConnection.getConnection();
         Customer customer = new Customer();
         try {
@@ -422,6 +448,8 @@ public class Database {
     }
     
     public Address getAddress(int addressID) {
+        // Gets a single address's record
+        
         connection = DBConnection.getConnection();
         Address address = new Address();
         try {
@@ -444,6 +472,8 @@ public class Database {
     }
     
     public City getCity(int cityID) {
+        // Gets a single city's record
+        
         connection = DBConnection.getConnection();
         City city = new City();
         try {
@@ -463,6 +493,8 @@ public class Database {
     }
     
     public Country getCountry(int countryID) {
+        // Gets a single country's record
+        
         connection = DBConnection.getConnection();
         Country country = new Country();
         try {
@@ -481,6 +513,8 @@ public class Database {
     }
     
     public User getUser(int userID) {
+        // Gets a single user's record
+        
         connection = DBConnection.getConnection();
         User user = new User();
         try {
@@ -499,6 +533,8 @@ public class Database {
     }
     
     public ObservableList<AppointmentReport> getAppointmentReport() {
+        // Gets the report of appointments by type
+        
         connection = DBConnection.getConnection();
         ObservableList<AppointmentReport> appointmentReport = FXCollections.observableArrayList();
         String sql = "SELECT MONTH(start) AS 'MonthNum', MONTHNAME(start) AS 'Month',"
@@ -523,6 +559,8 @@ public class Database {
     }
     
     public ObservableList<CityReport> getCityReport() {
+        // Gets the report of customers by city
+        
         connection = DBConnection.getConnection();
         ObservableList<CityReport> cityReport = FXCollections.observableArrayList();
         String sql = "SELECT city.city, COUNT(city)"
@@ -547,6 +585,7 @@ public class Database {
     
     public User validateUser(String userName, String password) {
         // REQUIREMENT A and I validates a user login
+        
         connection = DBConnection.getConnection();
         User user = new User();
         try {

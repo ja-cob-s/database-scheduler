@@ -32,7 +32,7 @@ import model.User;
 
 /**
  * FXML Controller class controls the Appointment screen which allows the user to
- * add or update appointment records
+ * add, update, or delete appointment records - part of REQUIREMENT C
  * @author jnsch
  */
 public class AppointmentController implements Initializable {
@@ -67,6 +67,10 @@ public class AppointmentController implements Initializable {
     private ChoiceBox<LocalTime> EndChooser;
     @FXML
     private Button SaveButton;
+    @FXML
+    private Button DeleteButton;
+    @FXML
+    private Button CustomerButton;
     
     private final ObservableList<LocalTime> validStartTimes = FXCollections.observableArrayList();
     private final ObservableList<LocalTime> validEndTimes = FXCollections.observableArrayList();
@@ -110,10 +114,10 @@ public class AppointmentController implements Initializable {
         
         if (this.getAppointment() == null) {
             ConsultantsTable.getSelectionModel().select(Database.getCurrentUser());
-        }
+            DeleteButton.setVisible(false);
+        } 
     }    
     
-    @FXML
     private void StartChooserHandler(ActionEvent event) {
         // Filters the valid end times so end time must be after chosen start time
         filteredEndTimes.setPredicate(s -> s.isAfter(StartChooser.getValue()));
@@ -142,9 +146,22 @@ public class AppointmentController implements Initializable {
             helper.nextScreenHandler(stage, "MainScreen.fxml");
         }  
     }
+    
+    @FXML
+    private void CustomerButtonHandler(ActionEvent event) throws IOException {
+        // Switches to customer record screen for the selected customer
+        if (CustomersTable.getSelectionModel().getSelectedItem() != null) {
+                Stage stage = (Stage) CustomerButton.getScene().getWindow();
+                CustomerController controller = (CustomerController) 
+                        helper.nextScreenControllerHandler(stage, "Customer.fxml");
+                Customer customer = CustomersTable.getSelectionModel().getSelectedItem();
+                controller.setCustomer(customer);
+            }
+    }
 
     @FXML
     private void CustomerSearchButtonHandler(ActionEvent event) {
+        // Searches the customer table view
         String searchItem = CustomerSearch.getText();
         ObservableList<Customer> filteredCustomers = FXCollections.observableArrayList();
         boolean found = false;
@@ -169,6 +186,7 @@ public class AppointmentController implements Initializable {
     
     @FXML
     private void ConsultantSearchButtonHandler(ActionEvent event) {
+        // Searches the consultant table view
         String searchItem = ConsultantSearch.getText();
         ObservableList<User> filteredConsultants = FXCollections.observableArrayList();
         boolean found = false;
@@ -192,7 +210,9 @@ public class AppointmentController implements Initializable {
     }
 
     @FXML
-    private void SaveButtonHandler(ActionEvent event) throws IOException {        
+    private void SaveButtonHandler(ActionEvent event) throws IOException {
+        // REQUIREMENT C - Saves a new appointment or updates an existing appointment
+        
         // These checks make sure all user input is valid before saving
         helper.setValidInput(true);
         Customer customer = CustomersTable.getSelectionModel().getSelectedItem();
@@ -244,10 +264,23 @@ public class AppointmentController implements Initializable {
                 this.getAppointment().setEnd(end);
                 database.updateAppointment(this.getAppointment());
             }
+            // Return to the main screen
             Stage stage = (Stage) SaveButton.getScene().getWindow();
             helper.nextScreenHandler(stage, "MainScreen.fxml");
         }
         helper.setExceptionString(""); // Clear out exception string for next run
+    }
+    
+    @FXML
+    private void DeleteButtonHandler(ActionEvent event) throws IOException {
+        // REQUIREMENT C - Deletes the current appointment and returns to the Main Screen
+        
+        if (helper.showConfirmationDialog("Are you sure you want to delete this appointment?")){
+            // User chose OK
+            database.deleteAppointment(this.getAppointment());
+            Stage stage = (Stage) SaveButton.getScene().getWindow();
+            helper.nextScreenHandler(stage, "MainScreen.fxml");
+        }
     }
     
     public void populateCustomersTable(ObservableList<Customer> list) {
@@ -276,6 +309,8 @@ public class AppointmentController implements Initializable {
         ConsultantsTable.getSelectionModel().select(appointment.getUser());
         StartChooser.setValue(appointment.getStart());
         EndChooser.setValue(appointment.getEnd());
+        
+        DeleteButton.setVisible(true);
     }
     
     public void setTimes() {
@@ -308,5 +343,4 @@ public class AppointmentController implements Initializable {
             helper.setExceptionString("Appointment overlaps with another appointment");
         }
     }
-    
 }

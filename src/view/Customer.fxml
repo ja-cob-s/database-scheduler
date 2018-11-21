@@ -69,5 +69,10 @@
       <TextField fx:id="CountryField" disable="true" editable="false" layoutX="525.0" layoutY="311.0" prefWidth="200.0" />
       <TextField fx:id="PostalCodeField" layoutX="525.0" layoutY="358.0" prefWidth="200.0" />
       <TextField fx:id="PhoneNumberField" layoutX="525.0" layoutY="406.0" prefWidth="200.0" promptText="123-456-7890" />
+      <Button fx:id="DeleteButton" layoutX="493.0" layoutY="516.0" mnemonicParsing="false" onAction="#DeleteButtonHandler" prefHeight="30.0" prefWidth="65.0" text="Delete">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
